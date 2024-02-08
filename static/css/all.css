@@ -1,0 +1,10 @@
+body {
+    background: linear-gradient(to right, #073c8b ,#038336);
+}
+
+.card{
+    text-align: center;
+    align-items: center;
+    margin-top: 40%;
+    box-shadow: black;
+}
