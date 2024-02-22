@@ -1,0 +1,32 @@
+{% extends "login.html" %}
+{% load static %}
+
+{% block form %}
+<h1>Create Account</h1>
+<br>
+<h2 style="color: white; margin:0;padding:0;">Already Have an Account?<a style="color: chartreuse;" href="">Log In</a></h2><br>
+{{form.errors}}
+<label for="first_name">{{form.first_name.label}}</label>
+{{form.first_name}}
+<br>
+<label for="last_name">{{form.last_name.label}}</label>
+{{form.last_name}}
+<br>
+<label for="last_name">{{form.username.label}}</label>
+{{form.username}}
+<br>
+<label for="email">{{form.email.label}}</label>
+{{form.email}}
+<br>
+<label for="date_of_birth">{{form.date_of_birth.label}}</label>
+{{form.date_of_birth}}
+<br>
+<label for="password1">{{form.password1.label}}</label>
+{{form.password1}}
+<br>
+<label for="password2">{{form.password2.label}}</label>
+{{form.password2}}
+<br>
+<br>
+<button value="submit">Submit</button>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "login.html" %} 
+{% load static %}
+
+
+
+{% block div %}
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/all.css' %}">
+
+<div class="hear">
+    <h1>Welcome to Chatter</h1>
+    <h5>Turning Chats to Chuckles</h5>
+   <h6>Every conversation is a chance to share laughter and spark joy.</h6>
+</div>
+<br><br><br>
+
+<div class="welcome">
+    <a class="btn btn-light btn-square me-5" href="">Create An Account</a>
+    <br>
+    <br>
+    <br>
+    <a class="btn btn-light btn-square me-2" href="">Login</a>
+</div>
+{% endblock %}
