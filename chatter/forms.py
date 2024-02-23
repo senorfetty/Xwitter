@@ -8,7 +8,7 @@ class RegForm(UserCreationForm):
     last_name= forms.CharField(max_length = 40, required = True, help_text='Required')
     username= forms.CharField(max_length=30, required=True)
     email= forms.EmailField(help_text="Please enter a valid email address.",required=True)
-    date_of_birth= forms.DateField(help_text="Format: DD-MM-YYYY")
+    date_of_birth= forms.DateField(help_text="Format: DD-MM-YYYY", widget=forms.DateInput(attrs= {'type':'date'}))
     
     class Meta:
         model = Account

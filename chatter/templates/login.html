@@ -42,11 +42,20 @@
                 <input type="checkbox" value="isRememberMe">Remember Me 
                 </label> <br>
                 <br>
-                <button type='submit'>Login</button><br>
+                <div class="sign">
+                    <button class="btn btn-light btn-square rounded-circle me-5">LOGIN</button>
+                </div>
+                <h4 style="color: white;">OR</h4> 
+                <a class="btn-google">
+                    <img src="static/img/google.png" class="google-logo" alt="">
+                    Sign In With Google
+                </a> <br>
                 <br>
-                <a class="btn btn-light btn-square rounded-circle" href="">Forgot Password ?</a>
-                <br> <br> <hr>
-                <a href="signup">Don't Have an Account? Sign Up</a>
+                <div class="passwd">
+                    <a class="btn me-5" style="color: chartreuse;" onmouseover="this.style.color = 'blue'" onmouseout="this.style.color='chartreuse'" href="">Forgot Password ?</a>
+                </div>
+                <br><hr>                 
+                <h2 style="color: white; margin:0;padding:0;">Don't Have an Account?<a style="color: chartreuse;" style="color: chartreuse;" onmouseover="this.style.color = 'blue'" onmouseout="this.style.color='chartreuse'" href="{% url 'signup' %}"> Sign Up</a></h2>
                 {% endblock %}
             </form>
         </div>

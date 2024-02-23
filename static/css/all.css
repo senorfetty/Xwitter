@@ -52,21 +52,26 @@ label {
     color: white;
     font-size: 20px;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    margin-right: 20px;
 }
 
-h1,h5 {
+
+h1,h5,h4 {
     color: white;
     margin: 0;
     padding: 0;
 }
 
 input{
-    height: 25px;
-    margin-top: 8px;
-    font-size: 14px;
+    height: 29px;
+    margin-top: 10px;
     padding: 0 10px;
     font-size: 14px;
-    font-weight: bolder;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-right: 0;    
+    flex-grow: 1;
+    
 }
 * ::placeholder {
     color: black;
@@ -76,16 +81,44 @@ input{
 button {
     height: 38px;
     font-size: 20px;
-    font-weight: bolder;
     cursor: pointer;
-    background-color: rgb(139, 200, 33);
-    color: rgb(0, 0, 0);
+    display: inline-block;
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
 button:hover {
     background-color: white;
 }
+.btn-google {
+    font-size: 20px;
+    cursor: pointer;
+    display: inline-block;
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+}
 
+.google-logo {
+    width: 20px; /* Adjust the size of Google logo */
+    height: 20px;
+    margin-right: 10px;
+}
 a {
     color: white;
     font-size: 22px;
@@ -108,18 +141,55 @@ h2 {
 }
 
 
-.btn {
-    font-family: 'Oswald', sans-serif;
+.welcome .btn {
+    display: inline-block;
+    padding: 5px 20px;
+    background-color: #ebe2e2;
+    color: #000000;
+    text-decoration: dotted;
     text-transform: uppercase;
-    transition: .5s;    
-    color: #FFFFFF;
-    background-color: black;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
-
-.btn-square {
+.welcome .btn-square {
     width: 400px;
     height: 40px;
 }
 
 
+.welcome .btn:hover {
+    background-color: black;
+    color: white;
+}
+
+.sign .btn {
+    display: inline-block;
+    padding: 5px 20px;
+    background-color: #000000;
+    color: #ffffff;
+    text-decoration: dotted;
+    text-transform: uppercase;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+
+.sign .btn:hover {
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+}
+
+.formerr li {
+    background-color: #e40d22;
+    border: 1px solid #dcd8d9;
+    color: #e1dcdc; 
+    border-radius: 5px; 
+    margin-bottom: 5px; 
+    width: 300px; 
+    margin-left: auto; 
+    margin-right: auto;
+    list-style-type: none;
+}
