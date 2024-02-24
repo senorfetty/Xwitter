@@ -29,9 +29,16 @@
         </div>
         <br>
         <div class="card">
-            <form method="post">
+            <form action="" method="post">
                 {% block form %}
                 <h1>SIGN IN</h1> <br>
+                {% if messages %}
+                <div class="formerr">
+                {% for message in messages %}
+                <li>{{message}}</li>
+                {% endfor %}
+                </div>
+                {% endif %}                
                 {% csrf_token %}
                 <label for='username'>Username</label> <br>
                 <input type='text' id='username' name='username' placeholder='Enter Username' > <br>
