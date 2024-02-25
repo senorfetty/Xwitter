@@ -44,13 +44,13 @@
                 <input type='text' id='username' name='username' placeholder='Enter Username' > <br>
                 <br>
                 <label for='password'>Password</label> <br>
-                <input type='password' id='password' name='password' placeholder='Enter Password' > <i class="far fa-eye"></i> <br>
+                <input type='password' id='password' name='password' placeholder='Enter Password'> <i class="far fa-eye" onclick="showPass()"></i> <br>
                 <label class="checkbox">
-                <input type="checkbox" value="isRememberMe">Remember Me 
+                <input type="checkbox" id="rememberMe" value="IsRememberMe">Remember Me 
                 </label> <br>
                 <br>
                 <div class="sign">
-                    <button class="btn btn-light btn-square rounded-circle me-5">LOGIN</button>
+                    <button class="btn btn-light btn-square rounded-circle me-5" onclick="IsRememberMe()">LOGIN</button>
                 </div>
                 <h4 style="color: white;">OR</h4> 
                 <a class="btn-google">
@@ -67,5 +67,9 @@
             </form>
         </div>
         {% endblock %}
+
+
+
+        <script src="{% static  'js/login.js' %}"></script>
     </body>
 </html>
