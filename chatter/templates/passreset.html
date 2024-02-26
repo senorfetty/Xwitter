@@ -1,0 +1,26 @@
+{% extends 'login.html' %}
+{% load static %}
+{% block div %}
+
+<div class="header">
+    <h1> Chatter</h1>
+    <br>
+    <h5>Password Reset</h5>
+</div>
+<div class="header">
+    <h5>Enter your email address and we will email you instructions to reset your password</h5>
+</div>
+<br>
+<div class="card">
+    <form action="" method="post">
+    {% csrf_token %}
+    <label for="email">Your Email Address</label><br>
+    <input type="email" name="email" id="email" placeholder="Enter Email Address">
+    <br>
+    <br>
+    <div class="sign">
+        <button class="btn btn-light btn-square rounded-circle me-5">Submit</button>
+    </div>
+    </form>
+</div>
+{% endblock %}

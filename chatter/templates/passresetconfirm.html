@@ -1,0 +1,21 @@
+{% extends 'login.html' %}
+{% load static %}
+
+{% block div %}
+<div class="header">
+    <h2>
+        Password Reset Confirm
+    </h2>
+    <hr>
+    <p>Please Enter a New Password</p>
+    <form method="post">
+        {% csrf_token %}
+        <label for="password">Password</label>
+        <input type="password" placeholder="Enter New Password" name="password" required>
+        <br>
+        <label for="password">Confirm Password</label>
+        <input type="password" placeholder="Confirm Password" name="password2" required>
+        <button>Submit</button>  
+    </form>
+</div>
+{% endblock %}

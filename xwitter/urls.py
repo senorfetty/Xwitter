@@ -16,8 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth.views import PasswordResetCompleteView, PasswordResetConfirmView, PasswordResetView, PasswordResetDoneView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('chatter.urls'))
+    path('', include('chatter.urls')),
+    path('passreset/done/',PasswordResetDoneView.as_view(template_name='passresetdone.html'), name='passresetdone'),
+    path('reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='chatter/templates/passresetconfirm.html'), name='passresetconfirm'),
+    # path('reset/done', PasswordResetDoneView.as_view(template_name='chatter/templates/passresetdone.html', name= 'passresetcomplete'))
 ]
