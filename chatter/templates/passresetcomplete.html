@@ -1,0 +1,25 @@
+{% extends 'login.html' %}
+{% load static %}
+
+<link rel="stylesheet"  href="{% static 'css/all.css' %}">
+
+{% block div %}
+<div class="header">
+    <h1> Chatter</h1>
+    <br>
+    <h5>Password Reset Complete</h5>
+    <hr>
+</div>
+<div class="card">
+    <h4>
+        Your password has been set. <br> <br>
+        You may go ahead and log in now <br> <br>
+        <br>
+        Thank You.
+    </h4>
+</div>
+<br>
+<div class="sign" style="display: flex; justify-content:center">
+    <a class="btn btn-light btn-square me-2" href="/login">Login</a>
+</div>
+{% endblock %}

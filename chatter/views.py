@@ -1,10 +1,10 @@
 from django.shortcuts import render,redirect
 from .forms import RegForm
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate,login,logout, get_user_model
 from django.contrib import messages
 from django.core.mail import EmailMessage, send_mail, BadHeaderError
 from django.template.loader import render_to_string
-from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from .models import *
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
@@ -14,6 +14,7 @@ from django.contrib.auth.tokens import default_token_generator
 from  .tokens import account_activation_token
 from django.contrib.sites.shortcuts import get_current_site
 
+User =get_user_model
 
 def welcome(request):
     return render(request, 'welcome.html')
@@ -87,18 +88,22 @@ def passreset(request):
     form= PasswordResetForm()
     return render(request, 'passreset.html', {'form': form})
 
-def activate(uidb64,token):
+def activate(request, uidb64, token):
     try:
-        uid = force_bytes(urlsafe_base64_decode(uidb64))
-        user = Account.objects.get(pk=uid)
-    except {TypeError, ValueError, OverflowError, Account.DoesNotExist}:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
         
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
-        user.save()
-        return redirect('login')
-    
+    if user is not None and default_token_generator.check_token(user, token):
+        if request.method == 'POST':
+            form = SetPasswordForm(user, request.POST)
+            if form.is_valid():
+                form.save()
+                # Redirect to a page indicating that the password reset is complete
+                return redirect('passreset_complete')
+        else:
+            form = SetPasswordForm(user)
+        return render(request, 'passresetconfirm.html', {'form': form})
     else:
         return HttpResponse('Activation Link Invalid')
-        

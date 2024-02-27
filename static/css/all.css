@@ -56,10 +56,17 @@ label {
 }
 
 
-h1,h5,h4 {
+h1,h2,h5,h4,h3 {
     color: white;
     margin: 0;
     padding: 0;
+}
+
+
+.header h3{
+    color: white;
+    margin: 0;
+    padding: 0;     
 }
 
 .m {

@@ -1,21 +1,48 @@
 {% extends 'login.html' %}
 {% load static %}
-
 {% block div %}
+
+
 <div class="header">
-    <h2>
-        Password Reset Confirm
-    </h2>
-    <hr>
-    <p>Please Enter a New Password</p>
+    <h1> Chatter</h1>
+</div>
+<div class="header">
+    <h4 style="color: white; margin:0; padding:0;">Enter a New password</h4>
+</div>
+<hr>
+<div class="card">
     <form method="post">
-        {% csrf_token %}
-        <label for="password">Password</label>
-        <input type="password" placeholder="Enter New Password" name="password" required>
+        <h1>Password Reset</h1>
         <br>
-        <label for="password">Confirm Password</label>
-        <input type="password" placeholder="Confirm Password" name="password2" required>
-        <button>Submit</button>  
+        {% csrf_token %}
+        <div class="formerr">
+            {% for field_errors in form.errors.values %}
+                {% for error in field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+        {{  form.as_p }}
+        <!-- <label for="{{ form.new_password1.id_for_label }}">New Password:</label> <br>
+        <input type="password" id="password" name="{{ form.new_password1.name }}">
+        <i class="far fa-eye" onclick="showPass()"></i>
+        <br>
+        <br>        
+        <label for="{{ form.new_password2.id_for_label }}">Confirm Password:</label> <br>
+        <input type="password" id="password2" name="{{ form.new_password2.name }}">
+        <i class="far fa-eye" onclick="showPass()"></i>
+        <br> <br> -->
+        {{ field }}
+
+       {% if form.password_mismatch %}
+        <p class="instructions">Your new password must not be the same as your previous password.</p>
+        {% endif %}
+        <br>
+        <br>
+        <div class="sign">
+            <button class="btn btn-light btn-square rounded-circle me5">Set Password</button>  
+        </div>
     </form>
 </div>
 {% endblock %}
