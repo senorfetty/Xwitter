@@ -13,8 +13,7 @@ from django.db.models.query_utils import  Q
 from django.contrib.auth.tokens import default_token_generator
 from  .tokens import account_activation_token
 from django.contrib.sites.shortcuts import get_current_site
-
-User =get_user_model
+from .models import Account
 
 def welcome(request):
     return render(request, 'welcome.html')
@@ -24,8 +23,23 @@ def signup(request):
         form = RegForm(request.POST)
         
         if form.is_valid():
-            form.save()
-            return redirect('login')
+            user= form.save(commit=False)
+            user.is_active= False
+            user.save()
+        
+            current_site= get_current_site(request)
+            mail_subject= 'Activation Link has been sent to you'
+
+            message= render_to_string('email.html',{
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user)            
+            })
+            
+            data= form.cleaned_data.get('email')
+            send_mail(mail_subject,message,'chatterchuckles@gmail.com', [data],fail_silently=False)
+            return HttpResponse('Please confirm Email and complete registration')
         
     else:
         form = RegForm()
@@ -58,52 +72,46 @@ def logout_user(request):
     return redirect('login')
 
 
-def passreset(request):
-    if request.method == 'POST':
-        form = PasswordResetForm(request.POST)
-        if form.is_valid():
-            data= form.cleaned_data['email']
-            users= Account.objects.filter(Q(email=data))
+# def passreset(request):
+#     if request.method == 'POST':
+#         form = PasswordResetForm(request.POST)
+#         if form.is_valid():
+#             data= form.cleaned_data['email']
+#             users= Account.objects.filter(Q(email=data))
             
-            if users.exists():
-                for user in users:
-                    subject= 'Password Reset'
+#             if users.exists():
+#                 for user in users:
+#                     subject= 'Password Reset'
                     
-                    message = render_to_string('passresetemail.html', {
-                        'name': user.first_name,
-                        'email': user.email,
-                        'domain': get_current_site(request).domain,
-                        'site_name':'Chatter',
-                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                        'user': user,
-                        'token': default_token_generator.make_token(user),
-                    })                       
+#                     message = render_to_string('passresetemail.html', {
+#                         'name': user.first_name,
+#                         'email': user.email,
+#                         'domain': get_current_site(request).domain,
+#                         'site_name':'Chatter',
+#                         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+#                         'user': user,
+#                         'token': default_token_generator.make_token(user),
+#                     })                       
                     
-                    try:
-                        send_mail(subject,message,'chatterchuckles@gmail.com', [user.email],fail_silently=False)
-                    except BadHeaderError:
-                        return HttpResponse ('Invalid Header Found')
-                    return redirect('passreset/done')
+#                     try:
+#                         send_mail(subject,message,'chatterchuckles@gmail.com', [user.email],fail_silently=False)
+#                     except BadHeaderError:
+#                         return HttpResponse ('Invalid Header Found')
+#                     return redirect('password_reset_sent')
     
-    form= PasswordResetForm()
-    return render(request, 'passreset.html', {'form': form})
+#     form= PasswordResetForm()
+#     return render(request, 'passreset.html', {'form': form})
 
-def activate(request, uidb64, token):
+def activate( uidb64, token):
     try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-        
-    if user is not None and default_token_generator.check_token(user, token):
-        if request.method == 'POST':
-            form = SetPasswordForm(user, request.POST)
-            if form.is_valid():
-                form.save()
-                # Redirect to a page indicating that the password reset is complete
-                return redirect('passreset_complete')
-        else:
-            form = SetPasswordForm(user)
-        return render(request, 'passresetconfirm.html', {'form': form})
+        uid= force_str(urlsafe_base64_decode(uidb64))
+        user= Account.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, Account.DoesNotExist):
+        user=None
+    if user is not None and account_activation_token.check_token(user,token):
+        user.is_active= True
+        user.save()
+        return redirect('login')
     else:
         return HttpResponse('Activation Link Invalid')
+    
