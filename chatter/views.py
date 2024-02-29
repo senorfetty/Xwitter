@@ -64,45 +64,11 @@ def log(request):
     else:
         return render(request, 'login.html')
 
-def home(request):
-    return render(request, 'home.html')
-
 def logout_user(request):
     logout(request)
     return redirect('login')
 
-
-# def passreset(request):
-#     if request.method == 'POST':
-#         form = PasswordResetForm(request.POST)
-#         if form.is_valid():
-#             data= form.cleaned_data['email']
-#             users= Account.objects.filter(Q(email=data))
-            
-#             if users.exists():
-#                 for user in users:
-#                     subject= 'Password Reset'
-                    
-#                     message = render_to_string('passresetemail.html', {
-#                         'name': user.first_name,
-#                         'email': user.email,
-#                         'domain': get_current_site(request).domain,
-#                         'site_name':'Chatter',
-#                         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-#                         'user': user,
-#                         'token': default_token_generator.make_token(user),
-#                     })                       
-                    
-#                     try:
-#                         send_mail(subject,message,'chatterchuckles@gmail.com', [user.email],fail_silently=False)
-#                     except BadHeaderError:
-#                         return HttpResponse ('Invalid Header Found')
-#                     return redirect('password_reset_sent')
-    
-#     form= PasswordResetForm()
-#     return render(request, 'passreset.html', {'form': form})
-
-def activate( uidb64, token):
+def activate(request, uidb64, token):
     try:
         uid= force_str(urlsafe_base64_decode(uidb64))
         user= Account.objects.get(pk=uid)
@@ -114,4 +80,17 @@ def activate( uidb64, token):
         return redirect('login')
     else:
         return HttpResponse('Activation Link Invalid')
+    
+
+def home(request):
+    return render(request, 'home.html')
+
+def explore(request):
+    return render(request, 'explore.html')
+
+def msg(request):
+    return render(request, 'messages.html')
+
+def nots(request):
+    return render(request, 'notification.html')
     

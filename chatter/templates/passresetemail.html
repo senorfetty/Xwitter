@@ -1,15 +1,14 @@
 {% autoescape off %}
 
-Hello {{ user.username  }},
+Hello {{ user.username  }}, <br><br>
 
-We received a request to reset the password for your Chatter account for this email address. To initiate the password reset process for your account, click the link below.
+We received a request to reset the password for your Chatter account for this email address. To initiate the password reset process for your account, click the link below. <br><br>
 
-http://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}
+http://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %} <br><br>
 
-Thus link can only be used once. If you need to reset your password again, please visit http://{{ domain }} and request another reset.
+Thus link can only be used once. If you need to reset your password again, please visit http://{{ domain }} and request another reset. <br><br>
+If you didn't make this request, simply ignore this email <br>
 
-If you didn't make this request, simply ignore this email
-
-Sincerely,
+Sincerely,<br>
 Chatter App.
 {% endautoescape %}

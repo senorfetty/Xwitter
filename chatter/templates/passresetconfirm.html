@@ -1,26 +1,33 @@
 {% extends 'login.html' %}
 {% load static %}
 {% block div %}
-
-
 <div class="header">
     <h1> Chatter</h1>
 </div>
 <div class="header">
-    <h4 style="color: white; margin:0; padding:0;">Enter a New password</h4>
+    <h4>Enter a New password</h4>
 </div>
 <hr>
 <div class="card">
-    <h6 style="width: 60%; margin: 0 auto">
-        New Password
-      </h6>
-    <br />
-    <form action="" method="POST">
-      {% csrf_token %} 
-      {{form.as_p}}
-	  	<div>
-	    <button type="submit" class="btn btn-primary">Reset Password</button>
-	  </div>
-	</form>
+  <h2 style="text-align:center">Password Reset Confirmation</h2> <br>
+  <form method="post">
+      {% csrf_token %}
+      {% if form.errors %}
+      <div class="formerr">
+        {% for err in form.errors.values %}
+        {% for data in err %}
+        <li>{{data}}</li>
+        {% endfor %}
+        {% endfor %}
+      </div>
+      {% endif %}
+      <label for="{{ form.new_password1.id_for_label }}">New Password:</label> <br> 
+      <input type="password" name="{{ form.new_password1.name }}" id="id_new_password1"> <i class="far fa-eye" onclick="showPass('id_new_password1')"></i><br> <br>
+
+      <label for="{{ form.new_password2.id_for_label }}">Confirm New Password:</label> <br>
+      {{ form.new_password2 }} <i class="far fa-eye" onclick="showPass()"></i>  <br> <br> 
+      <div class="sign">
+        <button class="btn btn-light btn-primary btn-square rounded-circle">Reset Password</button>
+      </div>
 </div>
 {% endblock %}

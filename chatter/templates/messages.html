@@ -1,0 +1,9 @@
+{% extends "home.html" %}
+{% load static %}
+
+{% block navbar %}
+<li class="nav-item"><a href="{% url 'home' %}" class="nav-link ">Home</a></li>
+<li class="nav-item"><a href="{% url 'explore' %}" class="nav-link">Explore</a></li>
+<li class="nav-item"><a href="{% url 'notifications' %}" class="nav-link">Notifications</a></li>
+<li class="nav-item"><a href="{% url 'messages' %}" class="nav-link active">Messages</a></li>
+{% endblock %}

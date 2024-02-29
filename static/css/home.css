@@ -1,0 +1,100 @@
+.heading {
+    display: flex;
+    justify-content: space-between;
+    background-color: black;
+}
+
+.row{
+    display: flex;
+}
+
+.logout {
+    text-decoration: none;
+    color: #ff0019;
+    font-weight: bold;
+    background-color: #000000;
+    border-color: #ff0000;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, color 0.15s ease-in-out;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.logout:hover,
+.logout:focus {
+    background-color: #ff0019;
+    border-color: #000000;
+    color: #000000;
+}
+
+.navbar {
+    background-image: linear-gradient(to right, #000000, rgba(19, 89, 45, 0.604), #074a1c);
+    color: #ffffff;
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: #000000;
+    text-decoration: none;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.navbar-nav {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    text-decoration: none;
+}
+
+.nav-item {
+    margin-right: 1rem;
+}
+
+.navbar-nav .nav-link.active {
+    text-decoration: none;
+    color: #ffffff;
+    background-color: gray;
+    transition: color 0.3s ease;
+    padding: 1rem;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.nav-link:hover {
+    color: #890000ab;
+    background-color: white;
+}
+
+.nav-item a {
+    outline: none;
+    color: #ffffff;
+    text-decoration: wavy;
+}
+
+.search-form {
+    float: right;
+}
+
+.search-form input[type="text"] {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 5px;
+}
+
+/* .search-form button {
+    color: #000000;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 0.25rem 0.25rem 0.25rem 0.25rem;
+    margin-left: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 0.8rem;
+
+} */
