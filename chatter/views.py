@@ -8,7 +8,6 @@ from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from .models import *
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-from django.http import HttpResponse
 from django.db.models.query_utils import  Q
 from django.contrib.auth.tokens import default_token_generator
 from  .tokens import account_activation_token
@@ -39,13 +38,19 @@ def signup(request):
             
             data= form.cleaned_data.get('email')
             send_mail(mail_subject,message,'chatterchuckles@gmail.com', [data],fail_silently=False)
-            return HttpResponse('Please confirm Email and complete registration')
+            return redirect('conf')
         
     else:
         form = RegForm()
         
     return render(request, 'signup.html', {'form': form})
 
+def confemail(request):
+    return render(request, 'conf.html')
+
+def inv(request):
+    return render(request, 'invalid.html')
+    
 def log(request):
     if request.method == 'POST':
         username= request.POST.get('username')
@@ -79,7 +84,7 @@ def activate(request, uidb64, token):
         user.save()
         return redirect('login')
     else:
-        return HttpResponse('Activation Link Invalid')
+        return redirect('inval')
     
 
 def home(request):

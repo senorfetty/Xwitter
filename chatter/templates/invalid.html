@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invalid Activation Link</title>
+<link rel="stylesheet" href="{% static 'css/invalid.css' %}">
+
+</head>
+<body>
+<div class="container">
+    <div>
+        <img src="static/img/error.png" alt="Error" width="100">
+    </div>
+    <div class="error-message">
+        Invalid Activation Link
+    </div>
+    <div class="instruction">
+        The activation link you clicked is invalid or has expired.
+    </div>
+    <a href="{% url 'login' %}" class="button">Return to Login</a>
+</div>
+</body>
+</html>
