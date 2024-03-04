@@ -4,6 +4,9 @@
     background-color: black;
 }
 
+body {
+    background-color: #000000 !important;
+}
 .row{
     display: flex;
 }
@@ -15,6 +18,7 @@
     background-color: #000000;
     border-color: #ff0000;
     padding: 0.5rem 1rem;
+    font-size: larger;
     border-radius: 0.25rem;
     transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, color 0.15s ease-in-out;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
@@ -27,53 +31,40 @@
     color: #000000;
 }
 
-.navbar {
-    background-image: linear-gradient(to right, #000000, rgba(19, 89, 45, 0.604), #074a1c);
-    color: #ffffff;
-    padding: 1rem 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    
-}
 
-.navbar-brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-    color: #000000;
-    text-decoration: none;
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+.container {
+    bottom: 0;
+    position: fixed;
+    width: 100%;
 }
 
 .navbar-nav {
-    list-style: none;
+    list-style-type: none;
     display: flex;
-    justify-content: space-between;
     text-decoration: none;
+    justify-content: space-between;
 }
 
-.nav-item {
-    margin-right: 1rem;
+a{
+    color: white;
+    text-decoration: none;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    font-size: large;  
+    font-weight: bolder;
+    padding: 1rem;
 }
 
 .navbar-nav .nav-link.active {
-    text-decoration: none;
-    color: #ffffff;
-    background-color: gray;
+    color: #000000;
+    background-color: rgb(255, 255, 255);
     transition: color 0.3s ease;
     padding: 1rem;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 .nav-link:hover {
-    color: #890000ab;
+    color: #000000;
     background-color: white;
-}
-
-.nav-item a {
-    outline: none;
-    color: #ffffff;
-    text-decoration: wavy;
 }
 
 .search-form {
@@ -85,16 +76,3 @@
     border: none;
     border-radius: 5px;
 }
-
-/* .search-form button {
-    color: #000000;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    padding: 0.25rem 0.25rem 0.25rem 0.25rem;
-    margin-left: 0.5rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-size: 0.8rem;
-
-} */
