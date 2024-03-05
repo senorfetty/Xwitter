@@ -13,6 +13,12 @@ from django.contrib.auth.tokens import default_token_generator
 from  .tokens import account_activation_token
 from django.contrib.sites.shortcuts import get_current_site
 from .models import Account
+from dotenv import load_dotenv
+import requests
+import os
+from datetime import datetime
+
+load_dotenv()  
 
 def welcome(request):
     return render(request, 'welcome.html')
@@ -87,8 +93,26 @@ def activate(request, uidb64, token):
         return redirect('inval')
     
 
-def home(request):
-    return render(request, 'home.html')
+def home(request):    
+    api_key= os.getenv('newsapikey')
+    url= f'https://newsapi.org/v2/top-headlines?country=us&apiKey={api_key}'
+  
+    
+    response= requests.get(url)
+    data=response.json()  
+    
+    news= data.get('articles') 
+    
+    
+    filtered_news= []   
+    
+    for article in news:
+        if article.get('content') and '[Removed]'  not in article['title'] :
+            published_time= datetime.strptime(article['publishedAt'], '%Y-%m-%dT%H:%M:%SZ')
+            article['publishedAt']= published_time.strftime( "%d/%B/%Y %H:%M ") 
+            filtered_news.append(article)            
+    
+    return render(request, 'home.html', {'news' : filtered_news})
 
 def explore(request):
     return render(request, 'explore.html')

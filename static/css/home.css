@@ -7,9 +7,12 @@
 body {
     background-color: #000000 !important;
 }
-.row{
+.row {
     display: flex;
+    justify-content: space-between;
+
 }
+
 
 .logout {
     text-decoration: none;
@@ -36,6 +39,7 @@ body {
     bottom: 0;
     position: fixed;
     width: 100%;
+    background-color: #000000;
 }
 
 .navbar-nav {
@@ -43,6 +47,7 @@ body {
     display: flex;
     text-decoration: none;
     justify-content: space-between;
+
 }
 
 a{
@@ -76,3 +81,89 @@ a{
     border: none;
     border-radius: 5px;
 }
+
+.chatter  {
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    display: flex;
+    margin: 10px;
+}
+textarea {
+    width: 70%;
+    background-color: black;
+    color: white;
+    resize: none;
+    border: 1px solid green;
+}
+
+.search-form ::placeholder {
+    color: rgb(0, 0, 0);
+}
+
+::placeholder{
+    color: white;
+    font-size: large;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    
+}
+
+button {
+    background-color: green;
+    color: white;
+    padding: 10px 10px;
+    border-radius: 5px;
+    font-size: large;
+}
+
+button:hover {
+    background-color: rgb(12, 18, 194);
+    cursor: pointer;
+}
+
+
+.container2 {
+    padding: 1rem;
+}
+
+.trend {
+    color: rgb(184, 177, 177);    
+    background-color: rgba(0, 0, 0, 0.152);
+    font-weight: bolder;
+
+}
+
+.other {
+    color: white;
+}
+
+hr {
+    border: 2.9px solid green;
+}
+
+.card {
+    background-color:rgb(21, 211, 21);
+    border-radius: 4px;
+    border: 5px solid black;
+    color: black;
+    width: 70%;
+    margin: auto;
+    padding: 10px;
+    box-shadow: 5px 5px 8px blue, 10px 10px 8px red, 15px 15px 8px green;
+    border-radius: 10px;
+    opacity: 1;
+    font-weight: bolder;
+}
+
+.news {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    align-content: center;
+    color: white;
+}
+
+#time {
+    color: #ff0000a0;
+}
+

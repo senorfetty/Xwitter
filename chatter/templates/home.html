@@ -14,7 +14,7 @@
 
         
         <!-- <link rel="stylesheet" href="{% static 'css/all.css' %}"> -->
-        <link rel="stylesheet" href="{% static 'css/home.css' %}">
+
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         
@@ -28,6 +28,8 @@
         <!-- Customized Bootstrap Stylesheet -->
         <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
     
+        <link rel="stylesheet" href="{% static 'css/home.css' %}">
+
     </head>
     <body style="background-color: black;">
         <div class="heading">
@@ -41,7 +43,10 @@
             </div>
             <div class="col" style="padding-top: 20px;">
                 <a class="logout" href="{% url 'logout' %}">Logout</a>
-            </div>    </div>
+            </div>    
+        </div>
+
+
         <nav class="navbar">
             <form class="search-form" method='post'>
                 <input type="text" placeholder="Search ...">
@@ -57,7 +62,51 @@
                 </ul> 
             </div>
         </nav>
+        <br>
+        <hr>      
         
-        <hr>    
+        <div class="container2">        
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="trend">
+                        <h3>Trending Now!</h3>
+                        {% for article in news %}
+                        <ul >
+                            <li>{{ article.source.name }}</li>
+                        </ul>
+                        {% endfor %}
+                        <p id="time"></p>                
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="chatter">
+                        <textarea rows="7" cols="70" placeholder="What's on Your mind today {{ user.username.capitalize }}?"></textarea>
+                        <button>Post</button>
+                    </div>
+                    
+                    
+                    <div class="news">
+                        <h1>News </h1> 
+                        {% for article in news %}
+                        <div class="card">
+                            <a href="{{ article.url }}" target="_blank">{{ article.title }}</a>
+                            <p>{{ article.description }}</p>
+                            <p id="time">Publised At: {{ article.publishedAt}}</p>
+                            <img src="" alt="">
+                        </div>                    
+                            {% endfor %}
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="other">
+                        <h1>Hello</h1>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    
+
     </body>
 </html>
