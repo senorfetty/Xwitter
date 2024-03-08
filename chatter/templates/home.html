@@ -48,9 +48,11 @@
 
 
         <nav class="navbar">
+            {% block search %}
             <form class="search-form" method='post'>
                 <input type="text" placeholder="Search ...">
             </form>
+            {% endblock %}
             <div class="container">
                 <ul class="navbar-nav">
                     {% block navbar %}
@@ -65,8 +67,7 @@
         <br>
         <hr>      
 
-        {% block home %}
-        
+        {% block home %}        
         <div class="container2">        
             <div class="row">
                 <div class="col-md-4">
