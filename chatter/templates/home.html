@@ -73,18 +73,17 @@
                 <div class="col-md-4">
                     <div class="trend">
                         <h3>Trending Now!</h3>
-                        {% for article in news %}
+                        {% for topic in trending_topics %}
                         <ul >
-                            <li>{{ article.source.name }}</li>
+                            <li>{{ topic }}</li>
                         </ul>
-                        {% endfor %}
-                        <p id="time"></p>                
+                        {% endfor %}              
                     </div>
                 </div>
                 
                 <div class="col-md-4">
                     <div class="chatter">
-                        <textarea rows="7" cols="70" placeholder="What's on Your mind today {{ user.username.capitalize }}?"></textarea>
+                        <textarea rows="7" cols="50" placeholder="What's on Your mind today {{ user.username.capitalize }}?"></textarea>
                         <button>Post</button>
                     </div>
                     

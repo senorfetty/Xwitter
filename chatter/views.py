@@ -17,6 +17,9 @@ from dotenv import load_dotenv
 import requests
 import os
 from datetime import datetime
+from pytrends.request import TrendReq
+
+
 
 load_dotenv()  
 
@@ -92,17 +95,15 @@ def activate(request, uidb64, token):
     else:
         return redirect('inval')
     
-
-def home(request):    
+    
+def home(request):
     api_key= os.getenv('newsapikey')
     url= f'https://newsapi.org/v2/top-headlines?country=us&apiKey={api_key}'
-  
-    
+   
     response= requests.get(url)
     data=response.json()  
     
-    news= data.get('articles') 
-    
+    news= data.get('articles')    
     
     filtered_news= []   
     
@@ -110,9 +111,11 @@ def home(request):
         if article.get('content') and '[Removed]'  not in article['title'] :
             published_time= datetime.strptime(article['publishedAt'], '%Y-%m-%dT%H:%M:%SZ')
             article['publishedAt']= published_time.strftime( "%d/%B/%Y %H:%M ") 
-            filtered_news.append(article)            
-    
-    return render(request, 'home.html', {'news' : filtered_news})
+            filtered_news.append(article) 
+        
+    trending_topics = [article['title'][:20] for article in news if article.get('content') and '[Removed]' not in article['title']]
+ 
+    return render(request, 'home.html', {'news' : filtered_news, 'trending_topics' : trending_topics})
 
 def explore(request):
     return render(request, 'explore.html')
@@ -122,4 +125,4 @@ def msg(request):
 
 def nots(request):
     return render(request, 'notification.html')
-    
+
