@@ -7,7 +7,7 @@
 <br>
 <h2 style="color: white; margin:0;padding:0;">Already Have an Account? <a style="color: chartreuse;" onmouseover="this.style.color = 'blue'" onmouseout="this.style.color='chartreuse'" href=' {% url "login" %} '>Log In</a></h2><br>
 <div class="formerr">
-    {% for err in form.values %}
+    {% for err in form.errors.values %}
     {% for data in err %}
     <li>{{data}}</li>
     {% endfor %}

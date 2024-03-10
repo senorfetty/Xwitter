@@ -42,8 +42,6 @@ showPassword = () => {
     }
 }
 
-
-
 const remember = document.getElementById('rememberMe');
 const uName= document.getElementById('username');
 
@@ -67,3 +65,19 @@ if (localStorage.checkbox && localStorage.checkbox !== '') {
 
 
 
+
+document.addEventListener('DOMContentLoaded', function() {
+    var datePicker = document.getElementById('datepicker');
+
+    datePicker.addEventListener('input', function() {
+        var selectedDate = new Date(this.value);
+        var minDate = new Date('01-01-1924');
+        var maxDate = new Date('31-12-2014');
+
+        // Check if selectedDate is within the allowed range
+        if (selectedDate < minDate || selectedDate > maxDate) {
+            this.value = ''; // Clear the input if the selected date is outside the allowed range
+            alert('Please select a date between 1924 and 2014.');
+        }
+    });
+});
