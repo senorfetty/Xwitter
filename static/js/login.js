@@ -63,9 +63,6 @@ if (localStorage.checkbox && localStorage.checkbox !== '') {
     }
 }
 
-
-
-
 document.addEventListener('DOMContentLoaded', function() {
     var datePicker = document.getElementById('datepicker');
 
