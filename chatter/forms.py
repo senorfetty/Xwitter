@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from. models import Account
+from. models import Account, Post
 
 
 class RegForm(UserCreationForm):
@@ -12,5 +12,14 @@ class RegForm(UserCreationForm):
     
     class Meta:
         model = Account
-        fields= ( 'first_name', 'last_name', 'username', 'email', 'date_of_birth', 'password1', 'password2')
+        fields= ('first_name', 'last_name', 'username', 'email', 'date_of_birth', 'password1', 'password2')
+    
+class PostForm(forms.ModelForm):
+    body= forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'rows': 5,'placeholder': 'What\'s on Your Mind Today?'}))
+    
+    class Meta:
+        model = Post
+        fields= ['body']
     

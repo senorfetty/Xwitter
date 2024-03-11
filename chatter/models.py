@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser,Group,Permission
+from django.utils import timezone
 
 # Create your models here.
 
@@ -13,3 +14,13 @@ class Account(AbstractUser):
     class Meta:
         verbose_name= 'Account'
         verbose_name_plural= 'Accounts'
+        
+class Post(models.Model):
+    body= models.TextField()
+    created_at= models.DateTimeField(default=timezone.now, editable=False)
+    author= models.ForeignKey(Account, on_delete=models.CASCADE)
+    
+    
+    class Meta:
+        verbose_name= 'Post'
+        verbose_name_plural= 'Posts'

@@ -13,4 +13,19 @@
     <h1>Explore</h1>
 </div>
 
+
+<div class="news">
+    <h1>News</h1>                        
+    {% for article in news %}
+    <div class="card">
+        <a href="{{ article.url }}" target="_blank">{{ article.title }}</a>
+        <p>{{ article.description }}</p>
+        <p id="time">Publised At: {{ article.publishedAt}}</p>
+        <img src="" alt="">
+    </div>                    
+        {% endfor %}
+</div>
+
+
+
 {% endblock %}

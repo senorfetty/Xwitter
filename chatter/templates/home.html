@@ -31,7 +31,7 @@
         <link rel="stylesheet" href="{% static 'css/home.css' %}">
 
     </head>
-    <body style="background-color: black;">
+    <body>
         <div class="heading">
             <div class="row">
                 <div class="col">
@@ -79,26 +79,27 @@
                         </ul>
                         {% endfor %}              
                     </div>
-                </div>
-                
+                </div>                
                 <div class="col-md-4">
-                    <div class="chatter">
-                        <textarea rows="7" cols="50" placeholder="What's on Your mind today {{ user.username.capitalize }}?"></textarea>
-                        <button>Post</button>
+                    <div class="chatbox">
+                        <form action="" method="post" novalidate>
+                            {% csrf_token %}
+                            {{form.body}}
+                            <button>Post</button>
+                        </form>
                     </div>
-                    
-                    
-                    <div class="news">
-                        <h1>News </h1> 
-                        {% for article in news %}
-                        <div class="card">
-                            <a href="{{ article.url }}" target="_blank">{{ article.title }}</a>
-                            <p>{{ article.description }}</p>
-                            <p id="time">Publised At: {{ article.publishedAt}}</p>
-                            <img src="" alt="">
-                        </div>                    
-                            {% endfor %}
+                    <div class="not">
+                        <h1>Posts</h1>
                     </div>
+                    <div class="posts">
+                        {% for post in posts %}                        
+                        <div class="card4">                       
+                        <h2>{{ post.author }}</h2>
+                        <p>{{ post.body }}</p>
+                        <p id='createdat'>{{ post.created_at }}</p>  <br>                     
+                        </div>
+                        {% endfor %}
+                    </div>                    
                 </div>
 
                 <div class="col-md-4">

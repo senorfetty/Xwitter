@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .forms import RegForm
+from .forms import RegForm, PostForm
 from django.contrib.auth import authenticate,login,logout, get_user_model
 from django.contrib import messages
 from django.core.mail import EmailMessage, send_mail, BadHeaderError
@@ -10,9 +10,9 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.db.models.query_utils import  Q
 from django.contrib.auth.tokens import default_token_generator
-from  .tokens import account_activation_token
+from .tokens import account_activation_token
 from django.contrib.sites.shortcuts import get_current_site
-from .models import Account
+from .models import Account, Post
 from dotenv import load_dotenv
 import requests
 import os
@@ -96,7 +96,22 @@ def activate(request, uidb64, token):
         return redirect('inval')
     
     
-def home(request):
+def home(request):   
+    posts = Post.objects.all().order_by('-created_at')
+    if request.method == 'POST':        
+        form = PostForm(request.POST)
+        
+        if form.is_valid():
+            new_post=form.save(commit=False)
+            new_post.author=request.user
+            new_post.save()               
+            
+    else:
+        form = PostForm()           
+        
+    return render(request, 'home.html',{'posts' : posts, 'form' :form})
+
+def explore(request):
     api_key= os.getenv('newsapikey')
     url= f'https://newsapi.org/v2/top-headlines?country=us&apiKey={api_key}'
    
@@ -115,10 +130,8 @@ def home(request):
         
     trending_topics = [article['title'][:20] for article in news if article.get('content') and '[Removed]' not in article['title']]
  
-    return render(request, 'home.html', {'news' : filtered_news, 'trending_topics' : trending_topics})
+    return render(request, 'explore.html', {'news' : filtered_news, 'trending_topics' : trending_topics})
 
-def explore(request):
-    return render(request, 'explore.html')
 
 def msg(request):
     return render(request, 'messages.html')
