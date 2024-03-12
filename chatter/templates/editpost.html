@@ -1,0 +1,18 @@
+{% extends 'home.html' %}
+{% load static %}
+
+{% block comment %}
+<div class="col-md-4">
+    <div class="comm">
+        <a href="{% url 'home' %}" class="back">Back to Posts</a>
+    </div>
+    <h5>Update Your Post</h5>
+    <div class="chatbox">
+        <form action="" method="post" novalidate>
+            {% csrf_token %}
+            {{form.body}}
+            <button>Post</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

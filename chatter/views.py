@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
-from .forms import RegForm, PostForm
+from django.urls import reverse_lazy
+from .forms import RegForm, PostForm, CommentForm
 from django.contrib.auth import authenticate,login,logout, get_user_model
 from django.contrib import messages
 from django.core.mail import EmailMessage, send_mail, BadHeaderError
@@ -17,11 +18,17 @@ from dotenv import load_dotenv
 import requests
 import os
 from datetime import datetime
-from pytrends.request import TrendReq
-
+from django.views.generic import UpdateView, DeleteView
+from django.contrib.auth.mixins import  LoginRequiredMixin, UserPassesTestMixin
 
 
 load_dotenv()  
+
+class CustomLoginRequiredMixin(LoginRequiredMixin):
+    def handle_no_permission(self):
+        messages.error(self.request, "You must be logged in to access this page.")
+        return redirect('login')
+
 
 def welcome(request):
     return render(request, 'welcome.html')
@@ -107,7 +114,7 @@ def home(request):
             new_post.save()               
             
     else:
-        form = PostForm()           
+        form = PostForm()         
         
     return render(request, 'home.html',{'posts' : posts, 'form' :form})
 
@@ -133,9 +140,62 @@ def explore(request):
     return render(request, 'explore.html', {'news' : filtered_news, 'trending_topics' : trending_topics})
 
 
+def postcomments(request,pk):
+    post= Post.objects.get(pk=pk)
+    comments = Comment.objects.filter(post=post)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        
+        if form.is_valid():
+            comment= form.save(commit=False)
+            comment.author=request.user
+            comment.post= post
+            
+            comment.save()            
+            
+    else:
+        form=CommentForm()            
+            
+    return render(request, 'comments.html', {'post':post, 'form':form, 'comments':comments})
+
+
 def msg(request):
     return render(request, 'messages.html')
 
 def nots(request):
     return render(request, 'notification.html')
 
+class PostEditView(CustomLoginRequiredMixin,UserPassesTestMixin,UpdateView):
+    model= Post
+    fields= ['body']
+    template_name= 'editpost.html'
+    
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        return reverse_lazy('postdetail', kwargs={'pk': pk})
+    
+    def test_func(self):
+        post= self.get_object()
+        return self.request.user == post.author
+    
+class PostDeleteView(CustomLoginRequiredMixin,UserPassesTestMixin,DeleteView):
+    model=Post
+    template_name= 'deletepost.html'
+    success_url=  reverse_lazy('home')
+    
+    def test_func(self):
+        post= self.get_object()
+        return self.request.user == post.author
+    
+    
+class CommentDeleteView(CustomLoginRequiredMixin,UserPassesTestMixin,DeleteView):
+    model=Comment
+    template_name='deletecomment.html'
+    
+    def get_success_url(self):
+        postpk = self.kwargs['post_pk']
+        return reverse_lazy('postdetail', kwargs={'pk': postpk})
+
+    def test_func(self):
+        post= self.get_object()
+        return self.request.user == post.author

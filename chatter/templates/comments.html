@@ -1,0 +1,50 @@
+{% extends 'home.html' %}
+{% load static %}
+
+{% block comment %}
+<div class="col-md-4">
+    <div class="comm">
+        <a href="{% url 'home' %}" class="back">Back to Posts</a>
+    </div>
+    <div class="posts">                       
+        <div class="card5">                       
+        <h2>{{ post.author }}
+            {% if request.user == post.author %}
+                <div class='btns'>
+                    <a class='btns' href='{% url "editpost" post.pk %}'style='color:white;' ><i class='far fa-edit'></i></a>
+                    <a class='btns' href='{% url "deletepost" post.pk %}' style='color:white' ><i class='fas fa-trash'></i></a>
+                </div>
+            {% endif %}
+        </h2>
+        <p>{{ post.body }}</p> 
+        <p id='createdat'>{{ post.created_at }}</p>  <br>                     
+        </div>
+    </div>
+    <hr>
+    <div class="chatbox">
+        <form action="" method="post" novalidate>
+            {% csrf_token %}
+            {{ form.comment }}
+            <button class="btn">comment</button>
+        </form>
+        <br>
+    </div>
+    <div class="comments">
+        <h3>Replys</h3>
+        {% for comment in comments %}        
+        <div class="card6">            
+            <h2>
+                {{ comment.author }} 
+                {% if request.user == comment.author %}
+                <a class="btns" href="{% url 'deletecomment' post.pk comment.pk %}"><i class="fas fa-trash"></i></a>
+
+                {% endif %}
+            </h2>
+            <p>{{ comment.comment }}</p>
+            <p id='createdat'>{{ comment.created_at  }} </p>
+            <hr>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

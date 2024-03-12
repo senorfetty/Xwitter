@@ -1,4 +1,5 @@
 from . import views
+from .views import PostEditView, PostDeleteView, CommentDeleteView
 from django.urls import path
 from django.contrib.auth import views as auth_views
 
@@ -8,6 +9,10 @@ urlpatterns = [
     path('signup', views.signup, name= 'signup'),
     path('login', views.log, name= 'login'),
     path('home', views.home, name= 'home'),
+    path('home/post/<int:pk>/', views.postcomments, name= 'postdetail'),
+    path('home/post/edit/<int:pk>/', PostEditView.as_view() , name= 'editpost'),
+    path('home/post/delete/<int:pk>/', PostDeleteView.as_view() , name= 'deletepost'),
+    path('home/post/<int:post_pk>/comment/delete/<int:pk>/', CommentDeleteView.as_view() , name= 'deletecomment'),
     path('email_confirmation', views.confemail, name='conf'),
     path('invalid_link', views.inv, name='inval'),
     path('explore', views.explore, name= 'explore'),

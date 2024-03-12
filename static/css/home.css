@@ -242,29 +242,29 @@ hr {
 }
 
 .posts {
-    background-color: rgb(246, 246, 246);
+    background-color: rgb(0, 0, 0);
     color: white;
     align-items: center;
 }
 
 .card4 {
     border-style: dotted;
-    border: 3px solid black;
-    background-color: rgb(74, 36, 9);
+    background-color: rgb(0, 0, 0);
     margin: auto;
     padding: 5px;
     border-radius: 15px;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     font-style: oblique;
+    position: relative;
 }
 
-.card4  h2{
+.card4, .card5, .card6  h2{
     margin: 0;
     padding: 0;
     text-transform: capitalize;    
 }
 
-.card4 p{
+.card4, .card5, .card6 p{
     margin: 0;
     padding: 0;
     margin-bottom: 10px;
@@ -275,4 +275,72 @@ hr {
     color:  rgb(72, 211, 7);
     display: flex;
     justify-content: end;
+}
+
+.back {
+    color: rgb(60, 60, 255);
+    text-decoration: underline;    
+}
+
+.card5 {
+    border-style: dotted;
+    background-color: rgb(0, 0, 0);
+    margin: auto;
+    padding: 5px;
+    border-radius: 15px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-style: oblique;
+}
+
+.chatbox .btn {
+    background-color: rgb(33, 216, 23);
+    color: black;
+    margin: 0;
+    padding: 0.5px;
+    padding-right: 3px ;
+}
+
+.card6 {
+    color:  white;
+}
+
+h5 {
+    color: white;
+    font-size: large;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+}
+
+
+.del {
+    color: white;
+}
+
+h3 {
+    color: white;
+    text-align: center;
+    font-style: oblique;
+    margin: 0;
+    padding: 0;
+}
+
+.delete {
+    background-color: red;
+    width: 100%;
+}
+
+.btns{
+    float: right;
+}
+
+.btns:hover {
+    color: green;
+}
+
+.streched_link {
+    position:absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }

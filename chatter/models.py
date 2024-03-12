@@ -24,3 +24,9 @@ class Post(models.Model):
     class Meta:
         verbose_name= 'Post'
         verbose_name_plural= 'Posts'
+        
+class Comment(models.Model):
+    comment= models.TextField()
+    created_at= models.DateTimeField(default=timezone.now, editable=False)
+    author= models.ForeignKey(Account, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete= models.CASCADE)

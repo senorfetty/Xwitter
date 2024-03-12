@@ -1,0 +1,21 @@
+{% extends 'home.html' %}
+{% load static %}
+
+{% block comment %}
+<div class="col-md-4">
+    <div class="comm">
+        <a href="{% url 'postdetail' object.pk %}" class="back">Back to Feed</a>
+    </div>
+    <h3>Delete Post</h3>
+    <div class="chatbox">
+        <form action="" method="post" novalidate>
+            {% csrf_token %}
+            <div class="del">
+                <h4>Are you Sure ?</h4>
+                <p>You are about to delete this post, Once deleted it can't be undone!</p>
+               <button class="delete">Delete</button>
+            </div>            
+        </form>
+    </div>
+</div>
+{% endblock %}

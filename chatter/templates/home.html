@@ -80,6 +80,7 @@
                         {% endfor %}              
                     </div>
                 </div>                
+                {% block comment %}
                 <div class="col-md-4">
                     <div class="chatbox">
                         <form action="" method="post" novalidate>
@@ -90,17 +91,28 @@
                     </div>
                     <div class="not">
                         <h1>Posts</h1>
-                    </div>
+                    </div>                
+                    
                     <div class="posts">
-                        {% for post in posts %}                        
-                        <div class="card4">                       
-                        <h2>{{ post.author }}</h2>
-                        <p>{{ post.body }}</p>
-                        <p id='createdat'>{{ post.created_at }}</p>  <br>                     
+                    {% for post in posts %}                                   
+                        <div class="card4 position-relative"> 
+                            <h2>
+                                {{ post.author }}
+                                {% if request.user == post.author %}
+                                <div class='btns'>
+                                    <a class='btns' href='{% url "editpost" post.pk %}'style='color:white;' ><i class='far fa-edit'></i></a>
+                                    <a class='btns' href='{% url "deletepost" post.pk %}' style='color:white' ><i class='fas fa-trash'></i></a>
+                                </div>
+                                {% endif %}
+                            </h2>
+                            <p>{{ post.body }}</p>
+                            <p id='createdat'>{{ post.created_at }}</p> <br>
+                            <a href="{% url 'postdetail'  pk=post.pk %}" class="streched_link"></a>
                         </div>
-                        {% endfor %}
-                    </div>                    
-                </div>
+                    {% endfor %}
+                    </div>                        
+                </div>  
+                {% endblock %}                
 
                 <div class="col-md-4">
                     <div class="other">
@@ -109,9 +121,7 @@
                 </div>
             </div>
         </div>
-
-        {% endblock %}
-    
+        {% endblock %} 
 
     </body>
 </html>

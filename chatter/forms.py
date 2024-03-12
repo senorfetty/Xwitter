@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from. models import Account, Post
+from. models import Account, Post, Comment
 
 
 class RegForm(UserCreationForm):
@@ -22,4 +22,14 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields= ['body']
+        
+class CommentForm(forms.ModelForm):
+    comment= forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'rows': 2,'placeholder': 'Post Your Reply'}))
+    
+    class Meta:
+        model = Comment
+        fields= ['comment']
+    
     
