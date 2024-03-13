@@ -1,5 +1,5 @@
 from . import views
-from .views import PostEditView, PostDeleteView, CommentDeleteView
+from .views import PostEditView, PostDeleteView, CommentDeleteView, EditProfileView
 from django.urls import path
 from django.contrib.auth import views as auth_views
 
@@ -9,6 +9,8 @@ urlpatterns = [
     path('signup', views.signup, name= 'signup'),
     path('login', views.log, name= 'login'),
     path('home', views.home, name= 'home'),
+    path('profile/<int:pk>/', views.userProfile, name= 'profile'),
+    path('profile/edit_profile/<int:pk>/', EditProfileView.as_view(), name= 'editprofile'),
     path('home/post/<int:pk>/', views.postcomments, name= 'postdetail'),
     path('home/post/edit/<int:pk>/', PostEditView.as_view() , name= 'editpost'),
     path('home/post/delete/<int:pk>/', PostDeleteView.as_view() , name= 'deletepost'),
@@ -24,4 +26,7 @@ urlpatterns = [
     path('reset_password_sent/',auth_views.PasswordResetDoneView.as_view(template_name="passresetdone.html"),name="password_reset_done"),
     path('reset/<slug:uidb64>/<slug:token>',auth_views.PasswordResetConfirmView.as_view(template_name="passresetconfirm.html"),name="password_reset_confirm"),
     path('reset_password_complete/',auth_views.PasswordResetCompleteView.as_view(template_name="passresetcomplete.html"),name="password_reset_complete"),
-]
+] 
+
+
+    

@@ -1,0 +1,44 @@
+{% extends "home.html" %}
+{% load static %}
+
+
+{% block navbar %}
+<li class="nav-item"><a href="{% url 'home' %}" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+<li class="nav-item"><a href="{% url 'explore' %}" class="nav-link"><i class="fas fa-search"></i> Explore</a></li>
+<li class="nav-item"><a href="{% url 'notifications' %}" class="nav-link"><i class="fas fa-bell"></i> Notifications</a></li>
+<li class="nav-item"><a href="{% url 'messages' %}" class="nav-link"><i class="fas fa-envelope"></i> Messages</a></li>
+{% endblock %}
+{% block home %}
+
+<div class="col-md-4">
+    <div class="comm">
+        <a href="{% url 'profile' object.pk %}" class="back">Back to Profile</a>
+    </div>
+    <h5>Edit Your Profile</h5>
+    <div class="editprof>
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="Name">{{form.name.label}}</label> &nbsp;&nbsp;&nbsp;
+            {{form.name}}
+            <br>
+            <label for="Bio">{{form.bio.label}}</label>&nbsp;&nbsp;&nbsp; <br>
+            {{form.bio}}
+            <br>
+            <label for="Location">{{form.location.label}}</label>&nbsp;&nbsp;&nbsp;
+            {{form.location}}
+            <br>
+            <label for="Date of Birth">{{form.date_of_birth.label}}</label>&nbsp;&nbsp;&nbsp;
+            {{form.date_of_birth}}
+            <br>
+            <label for="Profile Picture">{{form.picture.label}}</label>&nbsp;&nbsp;&nbsp;
+            {{form.picture}}
+
+
+<br>
+            <button>Save</button>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

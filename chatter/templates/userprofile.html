@@ -1,0 +1,66 @@
+{% extends "home.html" %}
+{% load static %}
+
+{% block navbar %}
+<li class="nav-item"><a href="{% url 'home' %}" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+<li class="nav-item"><a href="{% url 'explore' %}" class="nav-link"><i class="fas fa-search"></i> Explore</a></li>
+<li class="nav-item"><a href="{% url 'notifications' %}" class="nav-link"><i class="fas fa-bell"></i> Notifications</a></li>
+<li class="nav-item"><a href="{% url 'messages' %}" class="nav-link"><i class="fas fa-envelope"></i> Messages</a></li>
+{% endblock %}
+{% block home %}
+
+<div class="not">
+    <h1>Your Profile</h1>
+</div>
+
+<div class="col-md-4">
+    <div class="comm">
+        <a href="{% url 'home' %}" class="back">Back to Feed</a>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile">
+            <br>
+            <img src="{{ profile.picture.url }}" height="150" width="150" alt=""> <button><a href="{% url 'editprofile' profile.pk %}">Edit Profile</a></button>
+            {% if profile.name %}
+            <h1>Name: {{ profile.name }} </h1> 
+            {% endif %} 
+            
+            {% if profile.bio %}
+            <p>Bio: {{ profile.bio }}</p> 
+            {% endif %}
+    
+            {% if profile.location %}
+            <p>Location: {{ profile.location }}</p> 
+            {% endif %}
+    
+            {% if profile.birth_date %}
+            <p>Date Of Birth: {{ profile.birthdate }}</p>
+            {% endif %}        
+        </div>    
+    </div>   
+
+    
+    <div class="poster-container">
+        <div class="posters">    
+            <h1>My Posts</h1> 
+            {% for post in posts %}                    
+            <div class="card7">                              
+            <h2><img src="{{ profile.picture.url }}" height="30" width="30" alt="">
+                {{ post.author }}
+                    <div class='btns'>
+                        <a class='btns' href='{% url "editpost" post.pk %}'style='color:white;' ><i class='far fa-edit'></i></a>
+                        <a class='btns' href='{% url "deletepost" post.pk %}' style='color:white' ><i class='fas fa-trash'></i></a>
+                    </div>
+            </h2>
+            <p>{{ post.body }}</p> 
+            <p id='createdat'>{{ post.created_at }}</p>  <br>     
+            <a href="{% url 'postdetail'  pk=post.pk %}" class="streched_link"></a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <hr>
+</div>
+{% endblock %}

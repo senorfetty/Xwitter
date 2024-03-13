@@ -104,8 +104,13 @@ def activate(request, uidb64, token):
     
     
 def home(request):   
-    posts = Post.objects.all().order_by('-created_at')
-    if request.method == 'POST':        
+    if not request.user.is_authenticated:
+        messages.error(request, "You must be logged in to access this page.")
+        return redirect('login')   
+    
+    posts = Post.objects.all().order_by('-created_at')    
+    
+    if request.method == 'POST':   
         form = PostForm(request.POST)
         
         if form.is_valid():
@@ -119,6 +124,10 @@ def home(request):
     return render(request, 'home.html',{'posts' : posts, 'form' :form})
 
 def explore(request):
+    if not request.user.is_authenticated:
+        messages.error(request, "You must be logged in to access this page.")
+        return redirect('login')
+    
     api_key= os.getenv('newsapikey')
     url= f'https://newsapi.org/v2/top-headlines?country=us&apiKey={api_key}'
    
@@ -160,9 +169,16 @@ def postcomments(request,pk):
 
 
 def msg(request):
+    if not request.user.is_authenticated:
+        messages.error(request, "You must be logged in to access this page.")
+        return redirect('login')
+    
     return render(request, 'messages.html')
 
 def nots(request):
+    if not request.user.is_authenticated:
+        messages.error(request, "You must be logged in to access this page.")
+        return redirect('login')
     return render(request, 'notification.html')
 
 class PostEditView(CustomLoginRequiredMixin,UserPassesTestMixin,UpdateView):
@@ -199,3 +215,29 @@ class CommentDeleteView(CustomLoginRequiredMixin,UserPassesTestMixin,DeleteView)
     def test_func(self):
         post= self.get_object()
         return self.request.user == post.author
+    
+    
+def userProfile(request,pk):
+    profile = Userprofile.objects.get(pk=pk)
+    user = profile.user
+    posts= Post.objects.filter(author=user).order_by('-created_at')
+    
+    context = {
+        'profile':profile,
+        'user':user,
+        'posts':posts,    }
+    
+    return render(request, 'userprofile.html', context)
+
+class EditProfileView(CustomLoginRequiredMixin,UserPassesTestMixin,UpdateView):
+    model= Userprofile
+    fields= '__all__'
+    template_name="editprofile.html"
+    
+    def get_success_url(self):
+        pk= self.kwargs['pk']
+        return reverse_lazy('profile',kwargs={'pk' : pk})
+    
+    def test_func(self):
+        profile= self.get_object()
+        return self.request.user == profile.user
