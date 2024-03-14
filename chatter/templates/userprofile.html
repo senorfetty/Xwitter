@@ -85,6 +85,22 @@
                     <p id='createdat'>{{ post.created_at }}</p> <br>
                     <a href="{% url 'postdetail'  pk=post.pk %}" class="streched_link"></a>
                 </div>
+                <div class="likes">
+                    <form action="{% url 'likes' post.pk%}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" >
+                        <button class="like-btn" type="submit">
+                            <i class="fas fa-thumbs-up">{{ post.likes.all.count }}</i>
+                        </button>
+                    </form>
+                    <form action="{% url 'dislikes' post.pk %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" >
+                        <button class="dislike-btn" type="submit">
+                            <i class="fas fa-thumbs-down">{{ post.dislikes.all.count }}</i>
+                        </button>
+                    </form>
+                </div>
             </div>  
         {% endfor %}  
         </div>

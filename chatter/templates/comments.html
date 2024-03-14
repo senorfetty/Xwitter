@@ -17,8 +17,26 @@
             {% endif %}
         </h2>
         <p>{{ post.body }}</p> 
-        <p id='createdat'>{{ post.created_at }}</p>  <br>                     
+        <p id='createdat'>{{ post.created_at }}</p>  <br>     
+        
+        <div class="likes d-flex flex-row">
+            <form action="{% url 'likes' post.pk%}" method="post">
+                {% csrf_token %}
+                <input type="hidden" >
+                <button class="like-btn" type="submit">
+                    <i class="fas fa-thumbs-up">{{ post.likes.all.count }}</i>
+                </button>
+            </form>
+            <form action="{% url 'dislikes' post.pk %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" >
+                <button class="dislike-btn" type="submit">
+                    <i class="fas fa-thumbs-down">{{ post.dislikes.all.count }}</i>
+                </button>
+            </form>
         </div>
+        </div>
+        
     </div>
     <hr>
     <div class="chatbox">
