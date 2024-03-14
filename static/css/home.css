@@ -426,3 +426,18 @@ img {
 .pbody {
     position: relative;
 }
+
+.conta {
+    display: flex;
+    align-items: center;
+    background-color: #000000;
+    margin:0;
+}
+
+.likes button {
+    background-color: #000000;
+}
+
+.dislikes button {
+    background-color: #000000;
+}
