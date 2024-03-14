@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
 from .forms import RegForm, PostForm, CommentForm
 from django.contrib.auth import authenticate,login,logout, get_user_model
 from django.contrib import messages
@@ -108,7 +109,8 @@ def home(request):
         messages.error(request, "You must be logged in to access this page.")
         return redirect('login')   
     
-    posts = Post.objects.all().order_by('-created_at')    
+    posts = Post.objects.all().order_by('-created_at') 
+    username= Userprofile.objects.all()
     
     if request.method == 'POST':   
         form = PostForm(request.POST)
@@ -121,7 +123,7 @@ def home(request):
     else:
         form = PostForm()         
         
-    return render(request, 'home.html',{'posts' : posts, 'form' :form})
+    return render(request, 'home.html',{'posts' : posts, 'form' :form, 'username':username})
 
 def explore(request):
     if not request.user.is_authenticated:
@@ -222,16 +224,33 @@ def userProfile(request,pk):
     user = profile.user
     posts= Post.objects.filter(author=user).order_by('-created_at')
     
+    followers= profile.followers.all()
+    
+    if len(followers) == 0:
+        is_following=False
+    
+    for follower in followers:
+        if follower == request.user:
+            is_following=True
+            break
+        else:
+            is_following=False
+    
+    number_of_followers=  len(followers)
+    
     context = {
         'profile':profile,
         'user':user,
-        'posts':posts,    }
+        'posts':posts,
+        'number_of_followers':number_of_followers,
+        'is_following':is_following        
+    }
     
     return render(request, 'userprofile.html', context)
 
 class EditProfileView(CustomLoginRequiredMixin,UserPassesTestMixin,UpdateView):
     model= Userprofile
-    fields= '__all__'
+    fields= ('name','bio','location','birth_date','picture')
     template_name="editprofile.html"
     
     def get_success_url(self):
@@ -241,3 +260,102 @@ class EditProfileView(CustomLoginRequiredMixin,UserPassesTestMixin,UpdateView):
     def test_func(self):
         profile= self.get_object()
         return self.request.user == profile.user
+    
+def Followers(request,pk):
+    profile= Userprofile.objects.get(pk=pk)
+    profile.followers.add(request.user)
+    
+    return redirect('profile', pk=profile.pk) 
+
+def Unfollowers(request,pk):
+    profile= Userprofile.objects.get(pk=pk)
+    profile.followers.remove(request.user)
+    
+    return redirect('profile', pk=profile.pk) 
+
+# from django.http import JsonResponse
+# from django.shortcuts import get_object_or_404
+# from .models import Post
+# from django.http import JsonResponse
+
+# def like_post_ajax(request, pk):
+#     if request.method == 'POST' and request.headers.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+#         post = get_object_or_404(Post, pk=pk)
+#         if post.likes.filter(id=request.user.id).exists():
+#             post.likes.remove(request.user)
+#             return JsonResponse({'success': True, 'action': 'unlike'})
+#         else:
+#             post.likes.add(request.user)
+#             return JsonResponse({'success': True, 'action': 'like'})
+#     return JsonResponse({'success': False})
+
+# def dislike_post_ajax(request, pk):
+#     if request.method == 'POST' and request.headers.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+#         post = get_object_or_404(Post, pk=pk)
+#         if post.dislikes.filter(id=request.user.id).exists():
+#             post.dislikes.remove(request.user)
+#             return JsonResponse({'success': True, 'action': 'undislike'})
+#         else:
+#             post.dislikes.add(request.user)
+#             return JsonResponse({'success': True, 'action': 'dislike'})
+#     return JsonResponse({'success': False})
+
+
+
+
+def likes(request,pk):
+    post= Post.objects.get(pk=pk)    
+    is_dislike= False
+    
+    for dislike in post.dislikes.all():
+        if  dislike == request.user:
+            is_dislike = True
+            break
+        
+    if is_dislike:
+        post.dislikes.remove(request.user)
+    
+    is_like= False
+    
+    for like in post.likes.all():
+        if  like == request.user:
+            is_like = True
+            break
+        
+    if not is_like:
+        post.likes.add(request.user)
+        
+    if is_like:
+        post.likes.remove(request.user)
+        
+    return redirect('home')  
+
+def dislikes(request,pk):
+    post= Post.objects.get(pk=pk)
+    
+    is_like= False
+    
+    for like in post.likes.all():
+        if  like == request.user:
+            is_like = True
+            break
+        
+    if is_like:
+        post.likes.remove(request.user)
+        
+    
+    is_dislike= False
+    
+    for dislike in post.dislikes.all():
+        if  dislike == request.user:
+            is_dislike = True
+            break
+        
+    if not is_dislike:
+        post.dislikes.add(request.user)
+        
+    if is_dislike:
+        post.dislikes.remove(request.user)
+    
+    return redirect('home')  
+

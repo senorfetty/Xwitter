@@ -10,7 +10,7 @@
 {% block home %}
 
 <div class="not">
-    <h1>Your Profile</h1>
+    <h1>Profile</h1>
 </div>
 
 <div class="col-md-4">
@@ -21,43 +21,72 @@
     <div class="profile-container">
         <div class="profile">
             <br>
-            <img src="{{ profile.picture.url }}" height="150" width="150" alt=""> <button><a href="{% url 'editprofile' profile.pk %}">Edit Profile</a></button>
-            {% if profile.name %}
-            <h1>Name: {{ profile.name }} </h1> 
-            {% endif %} 
+            <img src="{{ profile.picture.url }}" height="150" width="150" alt=""> 
+            <div class="details">
+                {% if profile.name %}
+                <h1>Name: {{ profile.name }} </h1> 
+                {% endif %} 
+                
+                {% if profile.bio %}
+                <p>Bio: {{ profile.bio }}</p> 
+                {% endif %}
+        
+                {% if profile.location %}
+                <p>Location: {{ profile.location }}</p> 
+                {% endif %}
+        
+                {% if profile.birth_date %}
+                <p>Date Of Birth: {{ profile.birth_date }}</p>
+                {% endif %}     
+            </div>
             
-            {% if profile.bio %}
-            <p>Bio: {{ profile.bio }}</p> 
-            {% endif %}
-    
-            {% if profile.location %}
-            <p>Location: {{ profile.location }}</p> 
-            {% endif %}
-    
-            {% if profile.birth_date %}
-            <p>Date Of Birth: {{ profile.birthdate }}</p>
-            {% endif %}        
-        </div>    
+            <div class="follows">
+                FOLLOWERS: {{ number_of_followers }}
+                {% if user != request.user %}
+                {% if is_following %}
+                <form action="{% url 'removefollower' profile.pk %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn" style="background-color: red;">UnFollow</button>
+                </form>
+                {% else %}
+                <form action="{% url 'addfollower' profile.pk %}" method="post">  
+                    {% csrf_token %}
+                    <button class="btin">Follow</button>
+                </form>
+                {% endif %}
+                {% endif %}
+            </div> 
+        </div>
+          
+
+        <div class="edit">
+            <button><a href="{% url 'editprofile' profile.pk %}">Edit Profile</a></button>
+        </div>
+         
     </div>   
 
     
     <div class="poster-container">
         <div class="posters">    
             <h1>My Posts</h1> 
-            {% for post in posts %}                    
-            <div class="card7">                              
-            <h2><img src="{{ profile.picture.url }}" height="30" width="30" alt="">
-                {{ post.author }}
-                    <div class='btns'>
-                        <a class='btns' href='{% url "editpost" post.pk %}'style='color:white;' ><i class='far fa-edit'></i></a>
-                        <a class='btns' href='{% url "deletepost" post.pk %}' style='color:white' ><i class='fas fa-trash'></i></a>
-                    </div>
-            </h2>
-            <p>{{ post.body }}</p> 
-            <p id='createdat'>{{ post.created_at }}</p>  <br>     
-            <a href="{% url 'postdetail'  pk=post.pk %}" class="streched_link"></a>
-            </div>
-            {% endfor %}
+            {% for post in posts %}                                   
+            <div class="card4"> 
+                <a href="{% if post.author.profile %}{% url 'profile' post.author.profile.pk %}{% endif %}">
+                    <h2 class="at">@{{ post.author }}</h2>
+                </a>
+                {% if request.user == post.author %}
+                <div class='btns'>
+                    <a class='btns' href='{% url "editpost" post.pk %}'style='color:white;' ><i class='far fa-edit'></i></a>
+                    <a class='btns' href='{% url "deletepost" post.pk %}' style='color:white' ><i class='fas fa-trash'></i></a>
+                </div>
+                    {% endif %}
+                <div class="pbody">
+                    <p>{{ post.body }}</p>
+                    <p id='createdat'>{{ post.created_at }}</p> <br>
+                    <a href="{% url 'postdetail'  pk=post.pk %}" class="streched_link"></a>
+                </div>
+            </div>  
+        {% endfor %}  
         </div>
     </div>
     

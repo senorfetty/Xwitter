@@ -30,13 +30,14 @@
     
         <link rel="stylesheet" href="{% static 'css/home.css' %}">
 
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
     <body>
         <div class="heading">
             <div class="row">
                 <div class="col">
                     <a href="{% url 'profile' user.profile.pk  %}">
-                        <h1  style="margin: 10px; font-size: 2.25rem; color: #ffffff; text-transform: uppercase; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">{{ request.user }}</h1>
+                        <h1  style="margin: 10px;margin-top:0; font-size: 2.25rem; color: #ffffff; text-transform: uppercase; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">{{ request.user }}</h1>
                     </a>
                 </div>
             </div>
@@ -96,22 +97,41 @@
                     </div>                
                     
                     <div class="posts">
-                    {% for post in posts %}                                   
+                        {% for post in posts %}                                   
                         <div class="card4"> 
-                            <h2>
-                                {{ post.author }}
-                                {% if request.user == post.author %}
-                                <div class='btns'>
-                                    <a class='btns' href='{% url "editpost" post.pk %}'style='color:white;' ><i class='far fa-edit'></i></a>
-                                    <a class='btns' href='{% url "deletepost" post.pk %}' style='color:white' ><i class='fas fa-trash'></i></a>
-                                </div>
+                            <a href="{% if post.author.profile %}{% url 'profile' post.author.profile.pk %}{% endif %}">
+                                <h2 class="at">@{{ post.author }}</h2>
+                            </a>
+                            {% if request.user == post.author %}
+                            <div class='btns'>
+                                <a class='btns' href='{% url "editpost" post.pk %}'style='color:white;' ><i class='far fa-edit'></i></a>
+                                <a class='btns' href='{% url "deletepost" post.pk %}' style='color:white' ><i class='fas fa-trash'></i></a>
+                            </div>
                                 {% endif %}
-                            </h2>
-                            <p>{{ post.body }}</p>
-                            <p id='createdat'>{{ post.created_at }}</p> <br>
-                            <a href="{% url 'postdetail'  pk=post.pk %}" class="streched_link"></a>
-                        </div>
-                    {% endfor %}
+                            <div class="pbody">
+                                <p>{{ post.body }}</p>
+                                <p id='createdat'>{{ post.created_at }}</p> <br>
+                                <a href="{% url 'postdetail'  pk=post.pk %}" class="streched_link"></a>
+                            </div>
+                            <div class="likes d-flex flex-row">
+                                <form action="{% url 'likes' post.pk%}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" >
+                                    <button class="like-btn" type="submit">
+                                        <i class="fas fa-thumbs-up">{{ post.likes.all.count }}</i>
+                                    </button>
+                                </form>
+                                <form action="{% url 'dislikes' post.pk %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" >
+                                    <button class="dislike-btn" type="submit">
+                                        <i class="fas fa-thumbs-down">{{ post.dislikes.all.count }}</i>
+                                    </button>
+                                </form>
+                            </div>                           
+
+                        </div>  
+                    {% endfor %}   
                     </div>                        
                 </div>  
                 {% endblock %}                

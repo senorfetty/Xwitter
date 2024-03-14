@@ -21,7 +21,9 @@ class Post(models.Model):
     body= models.TextField()
     created_at= models.DateTimeField(default=timezone.now, editable=False)
     author= models.ForeignKey(Account, on_delete=models.CASCADE)    
-    
+    likes= models.ManyToManyField(Account, blank=True, related_name='likes')
+    dislikes= models.ManyToManyField(Account, blank=True, related_name='dislikes')
+   
     class Meta:
         verbose_name= 'Post'
         verbose_name_plural= 'Posts'
@@ -40,9 +42,9 @@ class Userprofile(models.Model):
     name=models.CharField(max_length=100,blank=True, null=True)
     bio= models.TextField(max_length=200,blank=True,null=True)
     location= models.CharField(max_length=50, null=True,blank=True)
-    birth_date=models.DateTimeField(null=True,blank=True)
+    birth_date=models.DateField(null=True,blank=True)
     picture= models.ImageField(upload_to='uploads/profile_pictures',default='uploads/profile_pictures/default.jpg',blank=True,null=True)
-    
+    followers= models.ManyToManyField(Account, blank=True, related_name='followers')
 
 @receiver(post_save, sender=Account)
 def  create_userprofile(sender, instance,created, **kwargs):
