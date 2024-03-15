@@ -52,8 +52,8 @@
 
         <nav class="navbar">
             {% block search %}
-            <form class="search-form" method='post'>
-                <input type="text" placeholder="Search ...">
+            <form class="search-form" action="{% url 'results' %}" method='get'>
+                <input type="text" placeholder="Search ..."  name="query" value="{{ request.GET.query }}"> <button style="background-color: black;"><i class="fas fa-search"></i></button>
             </form>
             {% endblock %}
             <div class="container">
@@ -119,7 +119,13 @@
                                         {% csrf_token %}
                                         <input type="hidden" >
                                         <button class="like-btn" type="submit">
-                                            <i class="fas fa-thumbs-up">{{ post.likes.all.count }}</i>
+                                            <i class="fas fa-thumbs-up">
+                                                {%  if  post.likes.all.count == 1 %}
+                                                {{ post.likes.all.count }} Like
+                                                {% else %}                                                
+                                                {{ post.likes.all.count }} Likes
+                                                {% endif %}
+                                            </i>
                                         </button>
                                     </form>
                                 </div>
@@ -128,11 +134,19 @@
                                         {% csrf_token %}
                                         <input type="hidden" >
                                         <button class="dislike-btn" type="submit">
-                                            <i class="fas fa-thumbs-down">{{ post.dislikes.all.count }}</i>
+                                            <i class="fas fa-thumbs-down">
+                                                {%  if  post.dislikes.all.count == 1 %}
+                                                {{ post.dislikes.all.count }} Dislike
+                                                {% else %}                                                
+                                                {{ post.dislikes.all.count }} Dislikes
+                                                {% endif %}
+                                            </i>
                                         </button>
                                     </form>
-                                </div>                                
-                                
+                                </div> 
+                                <div class="reply">
+                                    <button type="submit"><a href="{}"><i class="fas fa-comment">Comments</i></a></button>
+                                </div> 
                             </div>
                         </div>  
                     {% endfor %}   
@@ -140,11 +154,16 @@
                 </div>  
                 {% endblock %}                
 
+                {% if profile_list %}
                 <div class="col-md-4">
                     <div class="other">
-                        <h1>Hello</h1>
+                        <h1>Find Friends</h1>                        
+                        {% for prof in profile_list %}
+                            <p>{{ prof.username.capitalize }}</p>
+                        {% endfor %}                      
                     </div>  
                 </div>
+                {% endif %}
             </div>
         </div>
         {% endblock %} 

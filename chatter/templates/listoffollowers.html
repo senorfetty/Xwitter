@@ -1,0 +1,49 @@
+{% extends "home.html" %}
+{% load static %}
+
+{% block navbar %}
+<li class="nav-item"><a href="{% url 'home' %}" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+<li class="nav-item"><a href="{% url 'explore' %}" class="nav-link"><i class="fas fa-search"></i> Explore</a></li>
+<li class="nav-item"><a href="{% url 'notifications' %}" class="nav-link"><i class="fas fa-bell"></i> Notifications</a></li>
+<li class="nav-item"><a href="{% url 'messages' %}" class="nav-link"><i class="fas fa-envelope"></i> Messages</a></li>
+{% endblock %}
+
+{% block search %}
+{% endblock %}
+
+{% block home %}
+<div class="not">
+    <h1> {{ profile.user.username.capitalize }}'s Followers</h1>
+</div>
+
+<div class="followerslist-container">
+    <div class="followerslist">
+        {% for follows in followers %}
+        <div class="follower-item">
+            <div class="follower-info">
+                {{ follows.profile.name}}
+                <p> 
+                    <a href="{% url 'profile' follows.pk %}">
+                    @{{ follows }}</p>
+                    </a>
+            </div>
+            {% if follows != request.user %}
+            <div class="follow-button">                
+                {% if is_following %}
+                <form action='' method="post">
+                    {% csrf_token %}
+                    <button class="follow-btn" >UnFollow</button>
+                </form>
+                {% else %}
+                <form action='' method="post">  
+                    {% csrf_token %}
+                    <button class="follow-btn">Follow</button>
+                </form>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}    
+    </div>
+</div>
+{% endblock %}

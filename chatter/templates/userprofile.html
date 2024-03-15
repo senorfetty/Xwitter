@@ -41,7 +41,7 @@
             </div>
             
             <div class="follows">
-                FOLLOWERS: {{ number_of_followers }}
+                <a href="{% url 'lof' profile.pk %}">FOLLOWERS: {{ number_of_followers }}</a>                
                 {% if user != request.user %}
                 {% if is_following %}
                 <form action="{% url 'removefollower' profile.pk %}" method="post">

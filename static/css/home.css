@@ -441,3 +441,56 @@ img {
 .dislikes button {
     background-color: #000000;
 }
+
+.reply button {
+    background-color: #000000;
+}
+
+i.fas.fa-search {
+    color: white;
+}
+
+
+/* CSS styles for the followers list page */
+
+/* Styles for the container holding the followers list */
+.followerslist-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+/* Styles for each follower item */
+.follower-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000000;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+/* Styles for follower info */
+.follower-info p {
+    margin: 0;
+    color:blue
+}
+
+/* Styles for follow button */
+.follow-button {
+    padding: 5px 10px;
+}
+
+.follow-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+
+.follow-btn:hover {
+    background-color: #0056b3;
+}

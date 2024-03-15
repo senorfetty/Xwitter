@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect
+from django.db.models import Q
 from .forms import RegForm, PostForm, CommentForm
 from django.contrib.auth import authenticate,login,logout, get_user_model
 from django.contrib import messages
@@ -104,14 +104,28 @@ def activate(request, uidb64, token):
         return redirect('inval')
     
     
+def results(request):
+    query= request.GET.get("query")
+    search_list= Userprofile.objects.filter(Q(user__username__icontains=query))
+    
+        
+    return render (request, "results.html", {'search_list':search_list}) 
+
+    
 def home(request):   
     if not request.user.is_authenticated:
         messages.error(request, "You must be logged in to access this page.")
         return redirect('login')   
     
-    posts = Post.objects.all().order_by('-created_at') 
-    username= Userprofile.objects.all()
+    # query= request.GET.get('query')
+    profile_list = Account.objects.all()
     
+   
+    posts = Post.objects.all().order_by('-created_at') 
+    username= Userprofile.objects.all()  
+    
+    
+
     if request.method == 'POST':   
         form = PostForm(request.POST)
         
@@ -123,7 +137,7 @@ def home(request):
     else:
         form = PostForm()         
         
-    return render(request, 'home.html',{'posts' : posts, 'form' :form, 'username':username})
+    return render(request, 'home.html',{'posts' : posts, 'form' :form, 'username':username,  'profile_list': profile_list})
 
 def explore(request):
     if not request.user.is_authenticated:
@@ -273,11 +287,29 @@ def Unfollowers(request,pk):
     
     return redirect('profile', pk=profile.pk) 
 
-# from django.http import JsonResponse
-# from django.shortcuts import get_object_or_404
-# from .models import Post
-# from django.http import JsonResponse
-
+def listfollowers(request,pk):
+    profile = Userprofile.objects.get(pk=pk)    
+    followers= profile.followers.all()
+    
+    if len(followers) == 0:
+        is_following=False
+    
+    for follower in followers:
+        if follower == request.user:
+            is_following=True
+            break
+        else:
+            is_following=False
+    
+    
+    context = {
+        'followers':followers,
+        'profile':profile,
+        'is_following':is_following        
+    }
+    
+    return render(request, 'listoffollowers.html', context)
+    
 # def like_post_ajax(request, pk):
 #     if request.method == 'POST' and request.headers.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
 #         post = get_object_or_404(Post, pk=pk)
@@ -299,8 +331,6 @@ def Unfollowers(request,pk):
 #             post.dislikes.add(request.user)
 #             return JsonResponse({'success': True, 'action': 'dislike'})
 #     return JsonResponse({'success': False})
-
-
 
 
 def likes(request,pk):
