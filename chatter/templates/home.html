@@ -154,7 +154,6 @@
                 </div>  
                 {% endblock %}                
 
-                {% if profile_list %}
                 <div class="col-md-4">
                     <div class="other">
                         <h1>Find Friends</h1>                        
@@ -163,10 +162,11 @@
                         {% endfor %}                      
                     </div>  
                 </div>
-                {% endif %}
             </div>
         </div>
         {% endblock %} 
+
+        <script src="{% static 'js/likes.js' %}"></script>
 
     </body>
 </html>

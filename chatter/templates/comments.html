@@ -8,35 +8,51 @@
     </div>
     <div class="posts">                       
         <div class="card5">                       
-        <h2>{{ post.author }}
-            {% if request.user == post.author %}
-                <div class='btns'>
-                    <a class='btns' href='{% url "editpost" post.pk %}'style='color:white;' ><i class='far fa-edit'></i></a>
-                    <a class='btns' href='{% url "deletepost" post.pk %}' style='color:white' ><i class='fas fa-trash'></i></a>
+            <h2>{{ post.author }}
+                {% if request.user == post.author %}
+                    <div class='btns'>
+                        <a class='btns' href='{% url "editpost" post.pk %}'style='color:white;' ><i class='far fa-edit'></i></a>
+                        <a class='btns' href='{% url "deletepost" post.pk %}' style='color:white' ><i class='fas fa-trash'></i></a>
+                    </div>
+                {% endif %}
+            </h2>
+            <p>{{ post.body }}</p> 
+            <p id='createdat'>{{ post.created_at }}</p>  <br>     
+            
+            <div class="conta">
+                <div class="likes">
+                    <form action="{% url 'likes' post.pk%}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" >
+                        <button class="like-btn" type="submit">
+                            <i class="fas fa-thumbs-up">
+                                {%  if  post.likes.all.count == 1 %}
+                                {{ post.likes.all.count }} Like
+                                {% else %}                                                
+                                {{ post.likes.all.count }} Likes
+                                {% endif %}
+                            </i>
+                        </button>
+                    </form>
                 </div>
-            {% endif %}
-        </h2>
-        <p>{{ post.body }}</p> 
-        <p id='createdat'>{{ post.created_at }}</p>  <br>     
-        
-        <div class="likes d-flex flex-row">
-            <form action="{% url 'likes' post.pk%}" method="post">
-                {% csrf_token %}
-                <input type="hidden" >
-                <button class="like-btn" type="submit">
-                    <i class="fas fa-thumbs-up">{{ post.likes.all.count }}</i>
-                </button>
-            </form>
-            <form action="{% url 'dislikes' post.pk %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" >
-                <button class="dislike-btn" type="submit">
-                    <i class="fas fa-thumbs-down">{{ post.dislikes.all.count }}</i>
-                </button>
-            </form>
+                <div class="dislikes">
+                    <form action="{% url 'dislikes' post.pk %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" >
+                        <button class="dislike-btn" type="submit">
+                            <i class="fas fa-thumbs-down">
+                                {%  if  post.dislikes.all.count == 1 %}
+                                {{ post.dislikes.all.count }} Dislike
+                                {% else %}                                                
+                                {{ post.dislikes.all.count }} Dislikes
+                                {% endif %}
+                            </i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+                
         </div>
-        </div>
-        
     </div>
     <hr>
     <div class="chatbox">
@@ -47,6 +63,7 @@
         </form>
         <br>
     </div>
+    {% if comments %}
     <div class="comments">
         <h3>Replys</h3>
         {% for comment in comments %}        
@@ -60,9 +77,53 @@
             </h2>
             <p>{{ comment.comment }}</p>
             <p id='createdat'>{{ comment.created_at  }} </p>
-            <hr>
         </div>
-        {% endfor %}
+        <div class="conta">
+            <div class="likes">
+                <form action="{% url 'commentlike' post.pk comment.pk %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" >
+                    <button class="like-btn" type="submit">
+                        <i class="fas fa-thumbs-up">
+                            {%  if  comment.likes.all.count == 1 %}
+                            {{ comment.likes.all.count }} Like
+                            {% else %}                                                
+                            {{ comment.likes.all.count }} Likes
+                            {% endif %}
+                        </i>
+                    </button>
+                </form>
+            </div>
+            <div class="dislikes">
+                <form action="{% url 'commentdislike' post.pk comment.pk %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" >
+                    <button class="dislike-btn" type="submit">
+                        <i class="fas fa-thumbs-down">
+                            {%  if  comment.dislikes.all.count == 1 %}
+                            {{ comment.dislikes.all.count }} Dislike
+                            {% else %}                                                
+                            {{ comment.dislikes.all.count }} Dislikes
+                            {% endif %}
+                        </i>
+                    </button>
+                </form>
+            </div>
+            <div class="reply-btn">
+                <button class='reply-btn'  onclick="commentButton('{{comment.pk}}')"><i class="fas fa-comment-dots"></i></button>
+            </div>
+        </div>
+        <div class="chat" id="{{ comment.pk }}">
+            <form action="" method="post" novalidate>
+                {% csrf_token %}
+                {{ form.comment }}
+                <button class="btn">comment</button>
+            </form>
+            <br>
+        </div>
+        <hr>
+        {% endfor %}        
     </div>
+    {% endif %}
 </div>
 {% endblock %}

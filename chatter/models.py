@@ -35,7 +35,20 @@ class Comment(models.Model):
     created_at= models.DateTimeField(default=timezone.now, editable=False)
     author= models.ForeignKey(Account, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete= models.CASCADE)
+    likes= models.ManyToManyField(Account,blank=True,related_name="comment_likes")
+    dislikes= models.ManyToManyField(Account,blank=True,related_name="comment_dislikes")
+    parent= models.ForeignKey('self',on_delete=models.CASCADE, blank=True, null=True, related_name='+')
     
+    @property
+    def children(self):
+        return Comment.objects.filter(parent=self).order_by('-created_at').all()
+
+    @property
+    def is_parent(self):
+        if self.parent is None:
+            return True
+        else:
+            return False        
 
 class Userprofile(models.Model):
     user= models.OneToOneField(Account,primary_key=True,verbose_name='user',related_name='profile',on_delete=models.CASCADE)

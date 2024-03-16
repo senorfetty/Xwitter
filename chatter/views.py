@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.db.models import Q
 from .forms import RegForm, PostForm, CommentForm
 from django.contrib.auth import authenticate,login,logout, get_user_model
@@ -332,6 +332,59 @@ def listfollowers(request,pk):
 #             return JsonResponse({'success': True, 'action': 'dislike'})
 #     return JsonResponse({'success': False})
 
+def commentlike(request,post_pk,pk):
+    comment= Comment.objects.get(pk=pk)    
+    is_dislike= False
+    
+    for dislike in comment.dislikes.all():
+        if  dislike == request.user:
+            is_dislike = True
+            break
+        
+    if is_dislike:
+       comment.dislikes.remove(request.user)
+    
+    is_like= False
+    
+    for like in comment.likes.all():
+        if  like == request.user:
+            is_like = True
+            break
+        
+    if not is_like:
+        comment.likes.add(request.user)
+        
+    if is_like:
+        comment.likes.remove(request.user)   
+        
+    return redirect(reverse('postdetail', kwargs={'pk':post_pk}))
+
+def commentdislike(request,post_pk,pk):
+    comment= Comment.objects.get(pk=pk)    
+    is_like= False
+    
+    for like in comment.likes.all():
+        if  like == request.user:
+            is_like = True
+            break
+        
+    if is_like:
+       comment.likes.remove(request.user)
+    
+    is_dislike= False
+    
+    for dislike in comment.dislikes.all():
+        if  dislike == request.user:
+            is_dislike = True
+            break
+        
+    if not is_dislike:
+        comment.dislikes.add(request.user)
+        
+    if is_dislike:
+        comment.dislikes.remove(request.user)        
+   
+    return redirect(reverse('postdetail', kwargs={'pk':post_pk}))
 
 def likes(request,pk):
     post= Post.objects.get(pk=pk)    

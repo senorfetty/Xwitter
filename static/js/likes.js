@@ -73,3 +73,14 @@ $(document).ready(function() {
         });
     });
 });
+
+
+function commentButton(parent_id) {
+    const replyForm = document.getElementById(parent_id);
+
+    if (replyForm.classList.contains('chat')) {
+        replyForm.classList.remove('chat');
+    } else {
+        replyForm.classList.add('chat');
+    }
+}

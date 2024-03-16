@@ -246,6 +246,11 @@ hr {
     font-style: oblique;
 }
 
+.card6 {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-style: oblique;
+}
+
 .card4, .card5, .card6  h2{
     margin: 0;
     padding: 0; 
@@ -493,4 +498,12 @@ i.fas.fa-search {
 
 .follow-btn:hover {
     background-color: #0056b3;
+}
+
+.reply-btn {
+    background-color: black
+}
+
+.hidden {
+    display:none;
 }
