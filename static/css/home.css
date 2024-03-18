@@ -507,3 +507,49 @@ i.fas.fa-search {
 .hidden {
     display:none;
 }
+
+.send {
+    background-color: white;
+}
+
+.send:hover {
+    background-color: lightgray;
+}
+.comment-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.comment-wrapper textarea {
+    flex: 1;
+    /* Adjust other styles as needed */
+}
+
+.comment-wrapper .send {
+    margin-left: 10px;
+}
+
+.card9-container {
+    margin-left: 40px;
+}
+.card9 h2,p {
+    color: white;
+    margin: 0;
+    padding: 0;
+    font-size: medium;
+    font-style: oblique;
+}
+
+.badge{
+    display: inline-block;
+    padding: 0.4em 0.7em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 10rem;
+    background-color: red;
+    color: white;
+}

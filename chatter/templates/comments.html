@@ -59,14 +59,15 @@
         <form action="" method="post" novalidate>
             {% csrf_token %}
             {{ form.comment }}
-            <button class="btn">comment</button>
+            <button type="submit" class="send"><img src="{% static 'img/send.png' %}" alt="Send"></button>
         </form>
         <br>
     </div>
     {% if comments %}
     <div class="comments">
         <h3>Replys</h3>
-        {% for comment in comments %}        
+        {% for comment in comments %}    
+        {% if comment.is_parent %}    
         <div class="card6">            
             <h2>
                 {{ comment.author }} 
@@ -114,15 +115,67 @@
             </div>
         </div>
         <div class="chat" id="{{ comment.pk }}">
-            <form action="" method="post" novalidate>
+            <form action="{% url 'commentreplies' post.pk comment.pk %}" class="comment" method="post" novalidate>
                 {% csrf_token %}
-                {{ form.comment }}
-                <button class="btn">comment</button>
+                <div class="comment-wrapper" id="{{ comment.pk }}">
+                    {{ form.comment }}
+                    <button type="submit" class="send"><img src="{% static 'img/send.png' %}" alt="Send"></button>
+                </div>
             </form>
-            <br>
         </div>
         <hr>
-        {% endfor %}        
+        {% for child_comment in comment.children %}
+        <div class="card9-container">
+            <div class="card9">            
+                <h2>
+                    {{ child_comment.author }} 
+                    {% if request.user == child_comment.author %}
+                    <a class="btns" href="{% url 'deletecomment' post.pk child_comment.pk %}"><i class="fas fa-trash"></i></a>
+
+                    {% endif %}
+                </h2>
+                <p>{{ child_comment.comment }}</p>
+                <p id='createdat'>{{ child_comment.created_at  }} </p>
+            </div>
+            <div class="conta">
+                <div class="likes">
+                    <form action="{% url 'commentlike' post.pk child_comment.pk %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" >
+                        <button class="like-btn" type="submit">
+                            <i class="fas fa-thumbs-up">
+                                {%  if  comment.likes.all.count == 1 %}
+                                {{ comment.likes.all.count }} Like
+                                {% else %}                                                
+                                {{ comment.likes.all.count }} Likes
+                                {% endif %}
+                            </i>
+                        </button>
+                    </form>
+                </div>
+                <div class="dislikes">
+                    <form action="{% url 'commentdislike' post.pk comment.pk %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" >
+                        <button class="dislike-btn" type="submit">
+                            <i class="fas fa-thumbs-down">
+                                {%  if  comment.dislikes.all.count == 1 %}
+                                {{ comment.dislikes.all.count }} Dislike
+                                {% else %}                                                
+                                {{ comment.dislikes.all.count }} Dislikes
+                                {% endif %}
+                            </i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+            <hr>
+
+
+            {% endfor %}
+            {% endif %}
+            {% endfor %}        
     </div>
     {% endif %}
 </div>

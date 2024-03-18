@@ -119,7 +119,8 @@ def home(request):
     
     # query= request.GET.get('query')
     profile_list = Account.objects.all()
-    
+    request_user= request.user
+    notifications= Notification.objects.filter(to_user=request_user) 
    
     posts = Post.objects.all().order_by('-created_at') 
     username= Userprofile.objects.all()  
@@ -137,12 +138,16 @@ def home(request):
     else:
         form = PostForm()         
         
-    return render(request, 'home.html',{'posts' : posts, 'form' :form, 'username':username,  'profile_list': profile_list})
+    return render(request, 'home.html',{'posts' : posts, 'form' :form, 'username':username,  'profile_list': profile_list,'notifications':notifications})
 
 def explore(request):
     if not request.user.is_authenticated:
         messages.error(request, "You must be logged in to access this page.")
         return redirect('login')
+    
+    request_user= request.user
+    notifications= Notification.objects.filter(to_user=request_user) 
+   
     
     api_key= os.getenv('newsapikey')
     url= f'https://newsapi.org/v2/top-headlines?country=us&apiKey={api_key}'
@@ -162,8 +167,27 @@ def explore(request):
         
     trending_topics = [article['title'][:20] for article in news if article.get('content') and '[Removed]' not in article['title']]
  
-    return render(request, 'explore.html', {'news' : filtered_news, 'trending_topics' : trending_topics})
+    return render(request, 'explore.html', {'news' : filtered_news, 'trending_topics' : trending_topics, 'notifications' : notifications})
 
+def replycomments(request,post_pk,pk):
+    post= Post.objects.get(pk=post_pk)
+    parent_comment= Comment.objects.get(pk=pk)
+    
+    if request.method == 'POST':
+        form= CommentForm(request.POST)
+        
+        if form.is_valid():
+            new_comment= form.save(commit=False)
+            new_comment.author= request.user
+            new_comment.post =  post
+            new_comment.parent= parent_comment
+            new_comment.save()
+            
+    else:
+        form= CommentForm()
+        
+    return redirect(reverse ('postdetail', kwargs={'pk':post_pk}))
+        
 
 def postcomments(request,pk):
     post= Post.objects.get(pk=pk)
@@ -189,13 +213,21 @@ def msg(request):
         messages.error(request, "You must be logged in to access this page.")
         return redirect('login')
     
-    return render(request, 'messages.html')
+    request_user= request.user
+    notifications= Notification.objects.filter(to_user=request_user) 
+   
+    
+    return render(request, 'messages.html',{'notifications':notifications})
 
 def nots(request):
     if not request.user.is_authenticated:
         messages.error(request, "You must be logged in to access this page.")
         return redirect('login')
-    return render(request, 'notification.html')
+    
+    request_user= request.user
+    notifications= Notification.objects.filter(to_user=request_user).exclude(user_has_seen=True)
+        
+    return render(request, 'notification.html', {'notifications': notifications})
 
 class PostEditView(CustomLoginRequiredMixin,UserPassesTestMixin,UpdateView):
     model= Post
