@@ -23,7 +23,7 @@ class Post(models.Model):
     author= models.ForeignKey(Account, on_delete=models.CASCADE)    
     likes= models.ManyToManyField(Account, blank=True, related_name='likes')
     dislikes= models.ManyToManyField(Account, blank=True, related_name='dislikes')
-   
+    image= models.ImageField(upload_to='uploads/posts', blank=True,null=True)
     class Meta:
         verbose_name= 'Post'
         verbose_name_plural= 'Posts'
@@ -72,8 +72,8 @@ class Notification(models.Model):
     notification_type=models.IntegerField(choices=( (0,"Like"),(1,"Comment"),(2,"Follow")))
     to_user= models.ForeignKey(Account, on_delete=models.CASCADE, related_name='notification_to')
     from_user= models.ForeignKey(Account, on_delete=models.CASCADE, related_name='notification_from')
-    post= models.ForeignKey(Post, on_delete=models.CASCADE, null=True, blank=True, related_name='+')
-    post= models.ForeignKey(Comment, on_delete=models.CASCADE, null=True, blank=True)
+    post= models.ForeignKey('Post', on_delete=models.CASCADE, null=True, blank=True, related_name='+')
+    comment= models.ForeignKey('Comment', on_delete=models.CASCADE, null=True, blank=True)
     notification_date =models.DateTimeField(default=timezone.now)
     user_has_seen = models.BooleanField(default=False)
     

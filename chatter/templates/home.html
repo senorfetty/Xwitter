@@ -61,9 +61,7 @@
                     {% block navbar %}
                     <li class="nav-item"><a href="{% url 'home' %}" class="nav-link active"><i class="fas fa-home fa-beat"></i> Home</a></li>
                     <li class="nav-item"><a href="{% url 'explore' %}" class="nav-link"><i class="fas fa-search"></i> Explore</a></li>
-                    <li class="nav-item"><a href="{% url 'notifications' %}" class="nav-link "><i class="fas fa-bell"></i> Notifications 
-                        {% if notifications %} <span class="badge badge-pill badge-danger">{{notifications.count}} </span>{% endif %}
-                        </a></li> 
+                    <li class="nav-item"><a href="{% url 'notifications' %}" class="nav-link "><i class="fas fa-bell"></i> Notifications</a></li> 
                     <li class="nav-item"><a href="{% url 'messages' %}" class="nav-link"><i class="fas fa-envelope"></i> Messages</a></li>
                     {% endblock %}
                 </ul> 
@@ -88,9 +86,10 @@
                 {% block comment %}
                 <div class="col-md-4">
                     <div class="chatbox">
-                        <form action="" method="post" novalidate>
+                        <form action="" method="post" enctype="multipart/form-data" novalidate>
                             {% csrf_token %}
                             {{form.body}}
+                            {{ form.image }}
                             <button>Post</button>
                         </form>
                     </div>
@@ -111,15 +110,20 @@
                             </div>
                                 {% endif %}
                             <div class="pbody">
+                                {% if post.image %}
+                                <div class="imagepost">                                    
+                                    <img src="{{ post.image.url }}" alt="Image"/>
+                                </div>       
+                                {% endif %}                         
                                 <p>{{ post.body }}</p>
                                 <p id='createdat'>{{ post.created_at }}</p> <br>
-                                <a href="{% url 'postdetail'  pk=post.pk %}" class="streched_link"></a>
+                                <a href="{% url 'postdetail'  post.pk %}" class="streched_link"></a>
                             </div>
                             <div class="conta">
                                 <div class="likes">
-                                    <form action="{% url 'likes' post.pk%}" method="post">
+                                    <form method="post" action="{% url 'likes' post.pk %}" >
                                         {% csrf_token %}
-                                        <input type="hidden" >
+                                        <input type="hidden" name="next" value="{{ request.path }}">
                                         <button class="like-btn" type="submit">
                                             <i class="fas fa-thumbs-up">
                                                 {%  if  post.likes.all.count == 1 %}
@@ -134,7 +138,7 @@
                                 <div class="dislikes">
                                     <form action="{% url 'dislikes' post.pk %}" method="post">
                                         {% csrf_token %}
-                                        <input type="hidden" >
+                                        <input type="hidden" name="next" value="{{ request.path }}">
                                         <button class="dislike-btn" type="submit">
                                             <i class="fas fa-thumbs-down">
                                                 {%  if  post.dislikes.all.count == 1 %}
@@ -147,7 +151,7 @@
                                     </form>
                                 </div> 
                                 <div class="reply">
-                                    <button type="submit"><a href="{}"><i class="fas fa-comment">Comments</i></a></button>
+                                    <button type="submit"><a href="{% url 'postdetail' post.pk %}"><i class="fas fa-comment">Comments</i></a></button>
                                 </div> 
                             </div>
                         </div>  

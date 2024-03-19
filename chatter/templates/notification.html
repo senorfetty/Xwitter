@@ -27,36 +27,44 @@
             {% if notification.post %}
                 {% if notification.notification_type == 0 %}
                     <div class="notification-header">
-                        <div class="nots">
-                            <h3>
-                            <i class="fas fa-heart">                            
-                            {{ notification.from_user.username.capitalize }} has liked your post</i></h3> 
-                        </div>
+                        <a href="{% url 'postnotifications'  notification.pk notification.post.pk  %}">
+                            <div class="nots">
+                                <h3>
+                                <i class="fas fa-heart">                            
+                                {{ notification.from_user.username.capitalize }} has liked your post</i></h3> 
+                            </div>
+                        </a>
                     </div>
                 {% elif notification.notification_type == 1 %}
                     <div class="notification-header">
-                        <div class="nots"> 
-                            <h3>
-                                <i class="fas fa-comment"></i>
-                                {{ notification.from_user.username.capitalize }} has commented on your post</h3>
-                        </div>
+                        <a href="{% url 'postnotifications' notification.pk notification.post.pk  %}">
+                            <div class="nots"> 
+                                <h3>
+                                    <i class="fas fa-comment"></i>
+                                    {{ notification.from_user.username.capitalize }} has commented on your post</h3>
+                            </div>
+                        </a>
                     </div>
                 {% endif %}
             {% elif notification.comment %}
                 {% if notification.notification_type == 0 %}
                     <div class="notification-header">
-                        <div class="nots"> 
+                        < class="nots"> 
                             <h3>
-                                <i class="fas fa-heart"></i>
-                                {{ notification.from_user.username.capitalize }} has liked your comment</h3>
+                                <a href="{% url 'postnotifications'  notification.pk notification.comment.pk  %}">
+                                    <i class="fas fa-heart"></i>
+                                    {{ notification.from_user.username.capitalize }} has liked your comment</h3>
+                                </a>
                         </div>
                     </div>
                 {% elif notification.notification_type == 1 %}
                     <div class="notification-header">
                         <div class="nots"> 
                             <h3>
-                                <i class="fas fa-comment"> 
-                                {{ notification.from_user.username.capitalize }} has replied to your comment</h3>
+                                <a href="{% url 'postnotifications'  notification.pk notification.comment.pk  %}">
+                                    <i class="fas fa-comment"> 
+                                    {{ notification.from_user.username.capitalize }} has replied to your comment</h3>
+                                </a>
                         </div>
                     </div>
                 {% endif %}
@@ -64,30 +72,14 @@
                 <div class="notification-header">
                     <div class="nots"> 
                         <h3>
-                            <i class="fas fa-user"></i>
-                            {{ notification.from_user.username.capitalize }} has followed you </h3>
+                            <a href="{% url 'follownotifications' notification.pk notification.from_user.profile.pk %}">
+                                <i class="fas fa-user"></i>
+                                {{ notification.from_user.username.capitalize }} has followed you </h3>
+                            </a>    
                     </div>
-                    <!-- <div class="timed">
-                        <span style="color: white;">{{ notification.notification_date }}</span>
-                    </div> -->
+                </div>
             {% endif %}
         {% endfor %}
-
-                    {% comment %}
-                    <i class="fas fa-bell"></i>
-                    <span>3 hours ago</span>
-                    <h3>{{ user.username.capitalize }} sent you a message</h3> 
-                    <span>Hello How are you my friend</span> 
-                </div>
-                <div class="butts">
-                    <button class="butt">Reply</button>
-                    <button class="but">Delete</button> 
-                </div> 
-                {% endcomment %}  
-            </div>
-        </div> 
+    </div>
 {% endif %}
-                   
-
-
 {% endblock %}

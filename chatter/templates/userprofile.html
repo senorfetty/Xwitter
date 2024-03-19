@@ -81,7 +81,12 @@
                 </div>
                     {% endif %}
                 <div class="pbody">
-                    <p>{{ post.body }}</p>
+                    {% if post.image %}
+                    <div class="imagepost">                                    
+                        <img src="{{ post.image.url }}" alt="Image"/>
+                    </div>       
+                    {% endif %} 
+                <p>{{ post.body }}</p>
                     <p id='createdat'>{{ post.created_at }}</p> <br>
                     <a href="{% url 'postdetail'  pk=post.pk %}" class="streched_link"></a>
                 </div>

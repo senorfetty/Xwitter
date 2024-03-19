@@ -4,9 +4,7 @@
 {% block navbar %}
 <li class="nav-item"><a href="{% url 'home' %}" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
 <li class="nav-item"><a href="{% url 'explore' %}" class="nav-link "><i class="fas fa-search"></i> Explore</a></li>
-<li class="nav-item"><a href="{% url 'notifications' %}" class="nav-link "><i class="fas fa-bell"></i> Notifications 
-    {% if notifications %} <span class="badge badge-pill badge-danger">{{notifications.count}} </span>{% endif %}
-    </a></li> 
+<li class="nav-item"><a href="{% url 'notifications' %}" class="nav-link "><i class="fas fa-bell"></i> Notifications</a></li> 
 <li class="nav-item"><a href="{% url 'messages' %}" class="nav-link active"><i class="fas fa-envelope"></i> Messages</a></li>
 {% endblock %}
 {% block home %}

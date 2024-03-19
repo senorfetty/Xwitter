@@ -16,14 +16,19 @@
                     </div>
                 {% endif %}
             </h2>
+            {% if post.image %}
+            <div class="imagepost">                                    
+                <img src="{{ post.image.url }}" alt="Image"/>
+            </div>       
+            {% endif %} 
             <p>{{ post.body }}</p> 
             <p id='createdat'>{{ post.created_at }}</p>  <br>     
             
             <div class="conta">
                 <div class="likes">
-                    <form action="{% url 'likes' post.pk%}" method="post">
+                    <form action="{% url 'likes' post.pk %}" method="post">
                         {% csrf_token %}
-                        <input type="hidden" >
+                        <input type="hidden" name="next" value="{{ request.path }}">
                         <button class="like-btn" type="submit">
                             <i class="fas fa-thumbs-up">
                                 {%  if  post.likes.all.count == 1 %}
@@ -38,7 +43,7 @@
                 <div class="dislikes">
                     <form action="{% url 'dislikes' post.pk %}" method="post">
                         {% csrf_token %}
-                        <input type="hidden" >
+                        <input type="hidden" name="next" value="{{ request.path }}">
                         <button class="dislike-btn" type="submit">
                             <i class="fas fa-thumbs-down">
                                 {%  if  post.dislikes.all.count == 1 %}
@@ -81,9 +86,9 @@
         </div>
         <div class="conta">
             <div class="likes">
-                <form action="{% url 'commentlike' post.pk comment.pk %}" method="post">
+                <form action="{% url 'commentlikes' post.pk comment.pk %}" method="post">
                     {% csrf_token %}
-                    <input type="hidden" >
+                    <input type="hidden" name="next" value="{{ request.path }}">
                     <button class="like-btn" type="submit">
                         <i class="fas fa-thumbs-up">
                             {%  if  comment.likes.all.count == 1 %}
@@ -96,9 +101,9 @@
                 </form>
             </div>
             <div class="dislikes">
-                <form action="{% url 'commentdislike' post.pk comment.pk %}" method="post">
+                <form action="{% url 'commentdislikes' post.pk comment.pk %}" method="post">
                     {% csrf_token %}
-                    <input type="hidden" >
+                    <input type="hidden" name="next" value="{{ request.path }}">
                     <button class="dislike-btn" type="submit">
                         <i class="fas fa-thumbs-down">
                             {%  if  comment.dislikes.all.count == 1 %}
@@ -130,7 +135,7 @@
                 <h2>
                     {{ child_comment.author }} 
                     {% if request.user == child_comment.author %}
-                    <a class="btns" href="{% url 'deletecomment' post.pk child_comment.pk %}"><i class="fas fa-trash"></i></a>
+                    <a class="btns" href="{% url 'deletecomment' post.pk  child_comment.pk %}"><i class="fas fa-trash"></i></a>
 
                     {% endif %}
                 </h2>
@@ -139,30 +144,30 @@
             </div>
             <div class="conta">
                 <div class="likes">
-                    <form action="{% url 'commentlike' post.pk child_comment.pk %}" method="post">
+                    <form action="{% url 'childcommentlikes' post.pk  comment.pk child_comment.pk %}" method="post">
                         {% csrf_token %}
-                        <input type="hidden" >
+                        <input type="hidden" name="next" value="{{ request.path }}">
                         <button class="like-btn" type="submit">
                             <i class="fas fa-thumbs-up">
-                                {%  if  comment.likes.all.count == 1 %}
-                                {{ comment.likes.all.count }} Like
+                                {%  if  child_comment.likes.all.count == 1 %}
+                                {{ child_comment.likes.all.count }} Like
                                 {% else %}                                                
-                                {{ comment.likes.all.count }} Likes
+                                {{ child_comment.likes.all.count }} Likes
                                 {% endif %}
                             </i>
                         </button>
                     </form>
                 </div>
                 <div class="dislikes">
-                    <form action="{% url 'commentdislike' post.pk comment.pk %}" method="post">
+                    <form action="{% url 'childcommentdislikes' post.pk comment.pk child_comment.pk %}" method="post">
                         {% csrf_token %}
-                        <input type="hidden" >
+                        <input type="hidden" name="next" value="{{ request.path }}">
                         <button class="dislike-btn" type="submit">
                             <i class="fas fa-thumbs-down">
-                                {%  if  comment.dislikes.all.count == 1 %}
-                                {{ comment.dislikes.all.count }} Dislike
+                                {%  if child_comment.dislikes.all.count == 1 %}
+                                {{ child_comment.dislikes.all.count }} Dislike
                                 {% else %}                                                
-                                {{ comment.dislikes.all.count }} Dislikes
+                                {{ child_comment.dislikes.all.count }} Dislikes
                                 {% endif %}
                             </i>
                         </button>

@@ -1,5 +1,6 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.db.models import Q
 from .forms import RegForm, PostForm, CommentForm
 from django.contrib.auth import authenticate,login,logout, get_user_model
@@ -128,7 +129,7 @@ def home(request):
     
 
     if request.method == 'POST':   
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         
         if form.is_valid():
             new_post=form.save(commit=False)
@@ -183,6 +184,8 @@ def replycomments(request,post_pk,pk):
             new_comment.parent= parent_comment
             new_comment.save()
             
+        notification = Notification.objects.create(notification_type=1,from_user=request.user,to_user=parent_comment.author,post=post)
+            
     else:
         form= CommentForm()
         
@@ -198,9 +201,10 @@ def postcomments(request,pk):
         if form.is_valid():
             comment= form.save(commit=False)
             comment.author=request.user
-            comment.post= post
+            comment.post= post            
+            comment.save()   
             
-            comment.save()            
+        notification= Notification.objects.create(notification_type=1,from_user=request.user,to_user=post.author,post=post)         
             
     else:
         form=CommentForm()            
@@ -226,8 +230,28 @@ def nots(request):
     
     request_user= request.user
     notifications= Notification.objects.filter(to_user=request_user).exclude(user_has_seen=True)
-        
+    
+    
     return render(request, 'notification.html', {'notifications': notifications})
+
+def postnotifications(request, notification_pk,post_pk):
+    notification= Notification.objects.get(pk=notification_pk)
+    post=Post.objects.get(pk=post_pk)
+    
+    notification.user_has_seen = True
+    notification.save()
+    
+    return redirect ('postdetail' ,pk=post_pk) 
+
+def follownotifications(request, notification_pk,profile_pk):
+    notification= Notification.objects.get(pk=notification_pk)
+    profile=Userprofile.objects.get(pk=profile_pk)
+    
+    
+    notification.user_has_seen = True
+    notification.save()
+    
+    return redirect ('profile',pk=profile_pk)  
 
 class PostEditView(CustomLoginRequiredMixin,UserPassesTestMixin,UpdateView):
     model= Post
@@ -311,6 +335,8 @@ def Followers(request,pk):
     profile= Userprofile.objects.get(pk=pk)
     profile.followers.add(request.user)
     
+    notification= Notification.objects.create(notification_type=2,from_user=request.user,to_user=profile.user)
+    
     return redirect('profile', pk=profile.pk) 
 
 def Unfollowers(request,pk):
@@ -341,136 +367,183 @@ def listfollowers(request,pk):
     }
     
     return render(request, 'listoffollowers.html', context)
-    
-# def like_post_ajax(request, pk):
-#     if request.method == 'POST' and request.headers.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-#         post = get_object_or_404(Post, pk=pk)
-#         if post.likes.filter(id=request.user.id).exists():
-#             post.likes.remove(request.user)
-#             return JsonResponse({'success': True, 'action': 'unlike'})
-#         else:
-#             post.likes.add(request.user)
-#             return JsonResponse({'success': True, 'action': 'like'})
-#     return JsonResponse({'success': False})
-
-# def dislike_post_ajax(request, pk):
-#     if request.method == 'POST' and request.headers.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-#         post = get_object_or_404(Post, pk=pk)
-#         if post.dislikes.filter(id=request.user.id).exists():
-#             post.dislikes.remove(request.user)
-#             return JsonResponse({'success': True, 'action': 'undislike'})
-#         else:
-#             post.dislikes.add(request.user)
-#             return JsonResponse({'success': True, 'action': 'dislike'})
-#     return JsonResponse({'success': False})
-
-def commentlike(request,post_pk,pk):
-    comment= Comment.objects.get(pk=pk)    
-    is_dislike= False
-    
-    for dislike in comment.dislikes.all():
-        if  dislike == request.user:
-            is_dislike = True
-            break
-        
-    if is_dislike:
-       comment.dislikes.remove(request.user)
-    
-    is_like= False
-    
-    for like in comment.likes.all():
-        if  like == request.user:
-            is_like = True
-            break
-        
-    if not is_like:
-        comment.likes.add(request.user)
-        
-    if is_like:
-        comment.likes.remove(request.user)   
-        
-    return redirect(reverse('postdetail', kwargs={'pk':post_pk}))
-
-def commentdislike(request,post_pk,pk):
-    comment= Comment.objects.get(pk=pk)    
-    is_like= False
-    
-    for like in comment.likes.all():
-        if  like == request.user:
-            is_like = True
-            break
-        
-    if is_like:
-       comment.likes.remove(request.user)
-    
-    is_dislike= False
-    
-    for dislike in comment.dislikes.all():
-        if  dislike == request.user:
-            is_dislike = True
-            break
-        
-    if not is_dislike:
-        comment.dislikes.add(request.user)
-        
-    if is_dislike:
-        comment.dislikes.remove(request.user)        
-   
-    return redirect(reverse('postdetail', kwargs={'pk':post_pk}))
 
 def likes(request,pk):
-    post= Post.objects.get(pk=pk)    
+    post = Post.objects.get(pk=pk)
+    
     is_dislike= False
     
     for dislike in post.dislikes.all():
-        if  dislike == request.user:
+        if dislike == request.user:
             is_dislike = True
-            break
-        
+        break
+    
     if is_dislike:
         post.dislikes.remove(request.user)
     
     is_like= False
     
     for like in post.likes.all():
-        if  like == request.user:
+        if like == request.user:
             is_like = True
-            break
-        
+        break
+    
     if not is_like:
         post.likes.add(request.user)
+        
+        notification = Notification.objects.create(notification_type=0, from_user= request.user, to_user=post.author, post=post)
         
     if is_like:
         post.likes.remove(request.user)
         
-    return redirect('home')  
-
+    next= request.POST.get('next','/')
+    return HttpResponseRedirect(next)
+        
+    
 def dislikes(request,pk):
     post= Post.objects.get(pk=pk)
     
     is_like= False
     
     for like in post.likes.all():
-        if  like == request.user:
+        if like == request.user:
             is_like = True
-            break
-        
+        break
+    
     if is_like:
         post.likes.remove(request.user)
-        
     
     is_dislike= False
     
     for dislike in post.dislikes.all():
-        if  dislike == request.user:
+        if dislike == request.user:
             is_dislike = True
-            break
-        
+        break
+    
     if not is_dislike:
         post.dislikes.add(request.user)
         
     if is_dislike:
         post.dislikes.remove(request.user)
-    
-    return redirect('home')  
+        
+    next= request.POST.get('next','/')
+    return HttpResponseRedirect(next)
 
+def commentlikes(request,pk,post_pk):
+    post= Post.objects.get(pk=post_pk)
+    comment= Comment.objects.get(pk=pk)
+    
+    is_dislike= False
+    
+    for dislike in comment.dislikes.all():
+        if dislike == request.user:
+            dislike = True
+        break
+    
+    if is_dislike:
+        comment.dislikes.remove(request.user)
+    
+    is_like= False
+    
+    for like in comment.likes.all():
+        if like == request.user:
+            is_like = True
+        break
+    
+    if not is_like:
+        comment.likes.add(request.user)
+    
+        notification = Notification.objects.create(notification_type=0, from_user= request.user, to_user=comment.author, post=post)
+        
+    if is_like:
+        comment.likes.remove(request.user)
+        
+    next= request.POST.get('next', '/')
+    return  HttpResponseRedirect(next)
+
+def commentdislikes(request,pk,post_pk):
+    comment= Comment.objects.get(pk=pk)
+    
+    is_like= False
+    
+    for like in comment.likes.all():
+        if like == request.user:
+            is_like = True
+        break
+    
+    if is_like:
+        comment.likes.remove(request.user)
+    
+    is_dislike= False
+    
+    for dislike in comment.dislikes.all():
+        if dislike == request.user:
+            is_dislike = True
+        break
+    
+    if not is_dislike:
+        comment.dislikes.add(request.user)
+        
+    if is_dislike:
+        comment.dislikes.remove(request.user)
+        
+    next= request.POST.get('next','/')
+    return HttpResponseRedirect(next)
+def childcommentlikes(request, post_pk, parent_pk, pk):
+    child_comment = Comment.objects.get(pk=pk)
+    
+    is_dislike = False
+    
+    for dislike in child_comment.dislikes.all():
+        if dislike == request.user:
+            is_dislike = True
+            break
+    
+    if is_dislike:
+        child_comment.dislikes.remove(request.user)
+    
+    is_like = False
+    
+    for like in child_comment.likes.all():
+        if like == request.user:
+            is_like = True
+            break
+    
+    if not is_like:
+        child_comment.likes.add(request.user)
+        
+        notification = Notification.objects.create(notification_type=0, from_user= request.user, to_user=child_comment.author)
+    
+    else:
+        child_comment.likes.remove(request.user)
+        
+    next_url = request.POST.get('next', '/')
+    return HttpResponseRedirect(next_url)
+
+def childcommentdislikes(request, post_pk, parent_pk, pk):
+    child_comment = Comment.objects.get(pk=pk)
+    
+    is_like = False
+    
+    for like in child_comment.likes.all():
+        if like == request.user:
+            is_like = True
+            break
+    
+    if is_like:
+        child_comment.likes.remove(request.user)
+    
+    is_dislike = False
+    
+    for dislike in child_comment.dislikes.all():
+        if dislike == request.user:
+            is_dislike = True
+            break
+    
+    if not is_dislike:
+        child_comment.dislikes.add(request.user)
+    else:
+        child_comment.dislikes.remove(request.user)
+        
+    next_url = request.POST.get('next', '/')
+    return HttpResponseRedirect(next_url)

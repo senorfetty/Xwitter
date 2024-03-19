@@ -18,10 +18,10 @@ class PostForm(forms.ModelForm):
     body= forms.CharField(
         required=False,
         widget=forms.Textarea(attrs={'rows': 5,'placeholder': 'What\'s on Your Mind Today?'}))
-    
+    image= forms.ImageField(required=False)
     class Meta:
         model = Post
-        fields= ['body']
+        fields= ['body','image']
         
 class CommentForm(forms.ModelForm):
     comment= forms.CharField(
