@@ -77,3 +77,16 @@ class Notification(models.Model):
     notification_date =models.DateTimeField(default=timezone.now)
     user_has_seen = models.BooleanField(default=False)
     
+    
+class Thread(models.Model):
+    user= models.ForeignKey(Account, on_delete=models.CASCADE, related_name='+')
+    receiver= models.ForeignKey(Account, on_delete=models.CASCADE, related_name='+')
+    
+class Message(models.Model):
+    thread= models.ForeignKey('Thread', on_delete=models.CASCADE, related_name='+',blank=True,null=True)
+    sender_user= models.ForeignKey(Account, on_delete=models.CASCADE, related_name='+')
+    receiver_user= models.ForeignKey(Account, on_delete=models.CASCADE, related_name='+')
+    body= models.CharField(max_length=100)
+    message_date= models.DateTimeField(default=timezone.now) 
+    image= models.ImageField(upload_to='uploads/messages', blank=True,null=True)
+    is_read= models.BooleanField(default=False)

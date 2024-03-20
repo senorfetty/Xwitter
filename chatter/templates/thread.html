@@ -7,36 +7,34 @@
 <li class="nav-item"><a href="{% url 'notifications' %}" class="nav-link "><i class="fas fa-bell"></i> Notifications</a></li> 
 <li class="nav-item"><a href="{% url 'messages' %}" class="nav-link active"><i class="fas fa-paper-plane"></i> Messages</a></li>
 {% endblock %}
-
 {% block home %}
 <link rel="stylesheet" href="{% static 'css/messages.css' %}">
-
 <div class="not">
     <h1>Messages</h1>
 </div>
 
+
+<div class="comm">
+    <a href="{% url 'messages' %}" class="back">Back to Messages</a>
+</div>
+
 <div class="coversation-container">
     <div class="conversation">
-        <form method="get" action="{% url 'createthread' %}">
-            <button>Start a new conversation!</button>
-        </form>
+        <h3>Start a Conversation!</h3>
     </div>
 </div>
-<br>
-<div class="not">
-    <h3>Your Messages</h3>
+
+
+<div class="createthread-container">
+    <div class="createthread">
+        <h4>Enter Username</h4>
+            <form method="post" action="">
+                {% csrf_token %}
+                {{ form }}
+                <button>Submit</button>
+            </form>
+    </div>
 </div>
-
-
-{% for thread in threads %}
-<div class="thread-container">
-        <div class="thread">
-            <p>@{{thread.receiver}}</p>
-        </div>
-    <a href="{% url 'thread' thread.pk %}" class="streched_link"></a>
-</div>
-{% endfor %}
-
 
 
 

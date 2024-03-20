@@ -1,0 +1,112 @@
+.conversation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.thread-container {
+    margin-left: 10%;
+    border-bottom: 1px white solid;
+    margin-top: 10px;
+    position: relative;
+    padding: 1rem;
+    margin-right: 10%;
+}
+
+.createthread-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.createthread h4 {
+    margin: 0;
+    margin-top:10px ;
+    padding: 0;
+    color: white;
+}
+.createthread {
+    border: 2px solid white;
+    padding: 2rem;
+    border-radius: 17px;
+    text-align: center;
+}
+
+.createthread button {
+    background-color: blue;
+    padding: 2px;
+    font-size: 16px;
+    cursor: pointer;
+    outline: none;
+    margin-top: 12px;
+}
+
+.createthread button:hover {
+    background-color: black;
+    color: white;
+}
+
+/* .all {
+    border: 1px solid gray; */
+/* } */
+.inbox-container {
+    margin-left: 20%;
+    margin-right: 20%;
+    
+}
+
+.receiver-header h1 {
+    font-weight: bold;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: white;
+    border-bottom: 1px solid white;
+}
+
+/* .sent-message {
+    background-color: rgb(26, 140, 216);
+    color: black;
+    font-weight: bold;
+    border-bottom-right-radius: 4px;
+    padding: 0.5rem;
+    justify-content:flex-end;
+    display: flex;
+    border-radius: 8px;
+}
+
+.received-message {
+    background-color: white;
+    color: black;
+    font-weight: bold;
+    border-bottom-right-radius: 4px;
+    padding: 0.5rem;
+    display: inline-flex;   
+    border-radius: 8px;
+} */
+
+/* .ms-container {
+    width: 80%;
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    padding: 20px;
+    background-color: #f9f9f9;
+} */
+.sent-message {
+    background-color: rgb(26, 140, 216);
+    color: #000000;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+    justify-content:flex-end;
+    display: flex;
+    align-self: flex-start;
+    
+}
+.received-message {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+    max-width: 70%;
+    align-self: flex-start;
+}

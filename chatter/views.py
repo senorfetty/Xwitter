@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse, HttpResponseRedirect
 from django.db.models import Q
-from .forms import RegForm, PostForm, CommentForm
+from .forms import *
 from django.contrib.auth import authenticate,login,logout, get_user_model
 from django.contrib import messages
 from django.core.mail import EmailMessage, send_mail, BadHeaderError
@@ -210,18 +210,6 @@ def postcomments(request,pk):
         form=CommentForm()            
             
     return render(request, 'comments.html', {'post':post, 'form':form, 'comments':comments})
-
-
-def msg(request):
-    if not request.user.is_authenticated:
-        messages.error(request, "You must be logged in to access this page.")
-        return redirect('login')
-    
-    request_user= request.user
-    notifications= Notification.objects.filter(to_user=request_user) 
-   
-    
-    return render(request, 'messages.html',{'notifications':notifications})
 
 def nots(request):
     if not request.user.is_authenticated:
@@ -547,3 +535,70 @@ def childcommentdislikes(request, post_pk, parent_pk, pk):
         
     next_url = request.POST.get('next', '/')
     return HttpResponseRedirect(next_url)
+
+def msg(request):
+    if not request.user.is_authenticated:
+        messages.error(request, "You must be logged in to access this page.")
+        return redirect('login')
+    
+    profile= Userprofile.objects.all().filter(name=request.user)
+    
+
+    threads= Thread.objects.filter(Q(user=request.user) | Q(receiver=request.user))    
+   
+    
+    return render(request, 'messages.html',{'threads':threads,'profile':profile})
+
+def createthread(request):
+    if request.method == 'POST':
+        form = ThreadForm(request.POST)
+        
+        username= request.POST.get('username')       
+        
+        receiver = Account.objects.get(username=username)
+        if Thread.objects.filter(user=request.user,receiver=receiver).exists():
+            thread = Thread.objects.filter(user=request.user,receiver=receiver)[0]
+            return redirect('thread', pk=thread.pk)
+        elif  Thread.objects.filter(user=receiver,receiver=request.user).exists():
+            thread = Thread.objects.filter(user=receiver,receiver=request.user)[0]
+            return redirect ('thread', pk=thread.pk)
+        
+        if form.is_valid():
+            thread= Thread(
+                user=request.user,
+                receiver=receiver
+            )
+            thread.save()
+            
+            return redirect ('thread', pk=thread.pk)
+            
+    else:
+        form= ThreadForm()
+        
+    return render(request, 'thread.html', {'form':form})
+    
+    
+def inbox(request,pk):
+    form = MessageForm()
+    thread= Thread.objects.get(pk=pk)
+    message_list= Message.objects.filter(thread__pk__contains=pk)
+    
+    context = {
+        'message_list' : message_list,
+        'thread' : thread,
+        'form' : form
+    }
+    
+    return render (request,'inbox.html',context)
+
+def createmessage(request,pk):
+    thread=Thread.objects.get(pk=pk)
+    
+    if thread.receiver == request.user:
+        receiver= thread.user
+    else:
+        receiver= thread.receiver
+        
+    message=Message.objects.create(sender_user=request.user, receiver_user=receiver, thread=thread, body=request.POST.get('message'))
+    
+    return redirect('thread', pk=pk)
