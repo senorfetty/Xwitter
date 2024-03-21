@@ -24,7 +24,16 @@
     </div>
 </div>
 
+<br>
+{% if messages %}
+<div class="formerr">
+{% for message in messages %}
+<li>{{message}}</li>
+{% endfor %}
+</div>
+{% endif %}   
 
+<br>
 <div class="createthread-container">
     <div class="createthread">
         <h4>Enter Username</h4>

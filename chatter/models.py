@@ -69,11 +69,12 @@ def  save_userprofile(sender, instance, **kwargs):
     instance.profile.save()
     
 class Notification(models.Model):
-    notification_type=models.IntegerField(choices=( (0,"Like"),(1,"Comment"),(2,"Follow")))
+    notification_type=models.IntegerField(choices=( (0,"Like"),(1,"Comment"),(2,"Follow"),(3, "Message")))
     to_user= models.ForeignKey(Account, on_delete=models.CASCADE, related_name='notification_to')
     from_user= models.ForeignKey(Account, on_delete=models.CASCADE, related_name='notification_from')
     post= models.ForeignKey('Post', on_delete=models.CASCADE, null=True, blank=True, related_name='+')
     comment= models.ForeignKey('Comment', on_delete=models.CASCADE, null=True, blank=True)
+    thread= models.ForeignKey("Thread",on_delete=models.CASCADE, null=True, blank=True,related_name='+')
     notification_date =models.DateTimeField(default=timezone.now)
     user_has_seen = models.BooleanField(default=False)
     
@@ -88,5 +89,5 @@ class Message(models.Model):
     receiver_user= models.ForeignKey(Account, on_delete=models.CASCADE, related_name='+')
     body= models.CharField(max_length=100)
     message_date= models.DateTimeField(default=timezone.now) 
-    image= models.ImageField(upload_to='uploads/messages', blank=True,null=True)
+    image= models.ImageField(upload_to='uploads/messagepics', blank=True,null=True)
     is_read= models.BooleanField(default=False)

@@ -31,7 +31,11 @@
 {% for thread in threads %}
 <div class="thread-container">
         <div class="thread">
+            {% if thread.user == request.user %}
             <p>@{{thread.receiver}}</p>
+            {% else %}
+            <p>@{{thread.user}}</p>
+            {% endif %}
         </div>
     <a href="{% url 'thread' thread.pk %}" class="streched_link"></a>
 </div>

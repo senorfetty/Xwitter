@@ -49,7 +49,7 @@
             {% elif notification.comment %}
                 {% if notification.notification_type == 0 %}
                     <div class="notification-header">
-                        < class="nots"> 
+                        <div class="nots"> 
                             <h3>
                                 <a href="{% url 'postnotifications'  notification.pk notification.comment.pk  %}">
                                     <i class="fas fa-heart"></i>
@@ -68,6 +68,17 @@
                         </div>
                     </div>
                 {% endif %}
+            {% elif notification.thread %}
+                <div class="notification-header">
+                    <div class="nots"> 
+                        <h3>
+                            <a href="{% url 'messagenotifications' notification.pk notification.thread.pk %}">
+                                <i class="fas fa-envelope"></i>
+                                {{ notification.from_user.username.capitalize }} sent you a message </h3>
+                            </a>    
+                    </div>
+                </div>
+
             {% else %}
                 <div class="notification-header">
                     <div class="nots"> 

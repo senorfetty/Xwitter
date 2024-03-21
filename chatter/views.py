@@ -241,6 +241,15 @@ def follownotifications(request, notification_pk,profile_pk):
     
     return redirect ('profile',pk=profile_pk)  
 
+def messagenotifications(request,notification_pk,thread_pk):
+    notification = Notification.objects.get(pk=notification_pk)
+    thread=Thread.objects.get(pk=thread_pk)
+    
+    notification.user_has_seen = True
+    notification.save()
+    
+    return redirect ('thread', pk=thread_pk)
+
 class PostEditView(CustomLoginRequiredMixin,UserPassesTestMixin,UpdateView):
     model= Post
     fields= ['body']
@@ -555,22 +564,27 @@ def createthread(request):
         
         username= request.POST.get('username')       
         
-        receiver = Account.objects.get(username=username)
-        if Thread.objects.filter(user=request.user,receiver=receiver).exists():
-            thread = Thread.objects.filter(user=request.user,receiver=receiver)[0]
-            return redirect('thread', pk=thread.pk)
-        elif  Thread.objects.filter(user=receiver,receiver=request.user).exists():
-            thread = Thread.objects.filter(user=receiver,receiver=request.user)[0]
-            return redirect ('thread', pk=thread.pk)
-        
-        if form.is_valid():
-            thread= Thread(
-                user=request.user,
-                receiver=receiver
-            )
-            thread.save()
+        try:
+            receiver = Account.objects.get(username=username)
+            if Thread.objects.filter(user=request.user,receiver=receiver).exists():
+                thread = Thread.objects.filter(user=request.user,receiver=receiver)[0]
+                return redirect('thread', pk=thread.pk)
+            elif  Thread.objects.filter(user=receiver,receiver=request.user).exists():
+                thread = Thread.objects.filter(user=receiver,receiver=request.user)[0]
+                return redirect ('thread', pk=thread.pk)
             
-            return redirect ('thread', pk=thread.pk)
+            if form.is_valid():
+                thread= Thread(
+                    user=request.user,
+                    receiver=receiver
+                )
+                thread.save()
+                
+                return redirect ('thread', pk=thread.pk)
+        
+        except:
+            messages.error(request,"Username not found")
+            return redirect ('createthread')
             
     else:
         form= ThreadForm()
@@ -592,6 +606,7 @@ def inbox(request,pk):
     return render (request,'inbox.html',context)
 
 def createmessage(request,pk):
+    form= MessageForm(request.POST,request.FILES)
     thread=Thread.objects.get(pk=pk)
     
     if thread.receiver == request.user:
@@ -599,6 +614,18 @@ def createmessage(request,pk):
     else:
         receiver= thread.receiver
         
-    message=Message.objects.create(sender_user=request.user, receiver_user=receiver, thread=thread, body=request.POST.get('message'))
+    if form.is_valid():
+        message= form.save(commit=False)
+        message.thread=thread
+        message.sender_user=request.user
+        message.receiver_user=receiver
+        
+        message.save()
+    
+    notification= Notification.objects.create(notification_type=3,to_user=receiver,from_user=request.user,thread=thread)
     
     return redirect('thread', pk=pk)
+
+class MessageDelete(DeleteView):
+    model=Message
+    success_url= reverse_lazy('inbox')

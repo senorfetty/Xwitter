@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from. models import Account, Post, Comment
+from. models import Account, Post, Comment, Message
 
 
 class RegForm(UserCreationForm):
@@ -35,7 +35,14 @@ class CommentForm(forms.ModelForm):
 class ThreadForm(forms.Form):
     username= forms.CharField(label='',max_length=50)
     
-class MessageForm(forms.Form):
-    message= forms.CharField(label='',max_length=200)
+class MessageForm(forms.ModelForm):
+    body= forms.CharField(
+        label='',
+        max_length=200)
+    image= forms.ImageField(required=False)   
+    
+    class Meta:
+        model= Message
+        fields= ['body','image']
     
     

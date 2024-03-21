@@ -33,6 +33,7 @@ urlpatterns = [
     # path('notifications', views.nots, name= 'notifications'),
     path('notification/<int:notification_pk>/post/<int:post_pk>/', views.postnotifications, name='postnotifications'),
     path('notification/<int:notification_pk>/profile/<int:profile_pk>/', views.follownotifications, name='follownotifications'),
+    path('notification/<int:notification_pk>/message/<int:thread_pk>/', views.messagenotifications, name= 'messagenotifications'),
     path('messages/', views.msg, name= 'messages'),
     path('messages/<int:pk>/', views.inbox, name= 'thread'),
     path('messages/thread/', views.createthread, name= 'createthread'),
