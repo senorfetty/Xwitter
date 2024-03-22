@@ -118,7 +118,8 @@ def home(request):
         messages.error(request, "You must be logged in to access this page.")
         return redirect('login')   
     
-    # query= request.GET.get('query')
+    tags= Tag.objects.all()
+
     profile_list = Account.objects.all()
     request_user= request.user
     notifications= Notification.objects.filter(to_user=request_user) 
@@ -134,12 +135,14 @@ def home(request):
         if form.is_valid():
             new_post=form.save(commit=False)
             new_post.author=request.user
-            new_post.save()               
+            new_post.save()      
+            
+            new_post.create_tag()         
             
     else:
         form = PostForm()         
         
-    return render(request, 'home.html',{'posts' : posts, 'form' :form, 'username':username,  'profile_list': profile_list,'notifications':notifications})
+    return render(request, 'home.html',{'posts' : posts, 'form' :form, 'username':username,  'profile_list': profile_list,'notifications':notifications,'tags':tags})
 
 def explore(request):
     if not request.user.is_authenticated:
@@ -183,6 +186,8 @@ def replycomments(request,post_pk,pk):
             new_comment.post =  post
             new_comment.parent= parent_comment
             new_comment.save()
+            
+            new_comment.create_tag()
             
         notification = Notification.objects.create(notification_type=1,from_user=request.user,to_user=parent_comment.author,post=post)
             
@@ -629,3 +634,4 @@ def createmessage(request,pk):
 class MessageDelete(DeleteView):
     model=Message
     success_url= reverse_lazy('inbox')
+    

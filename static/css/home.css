@@ -562,3 +562,10 @@ i.fas.fa-search {
     align-items: center;
     justify-content: center;
 }
+
+.hashtag {
+    color: white;
+    text-transform: capitalize;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-style: italic;
+}
