@@ -1,7 +1,6 @@
 .heading {
     display: flex;
-    justify-content: space-between;
-    background-color: black;
+    justify-content: space-evenly space-between;
 }
 
 body {
@@ -10,15 +9,23 @@ body {
 }
 .row {
     display: flex;
+    justify-content: space-between;
 }
 
 .col-md-4 {
-    flex: 1;
+    flex: 3;
     border: 1px solid green; /* border for separation */
     padding: 7px; /* optional: add padding for spacing */
     margin-right: 10px; /* adjust margin to control space between columns */
     box-sizing: border-box; /* include padding in width calculation */
 }
+
+.row2 {
+    display: flex;
+    justify-content: space-between;
+}
+
+
 .logout {
     text-decoration: none;
     color: #ff0019;
@@ -27,6 +34,7 @@ body {
     border-color: #261212;
     padding: 0.5rem 1rem;
     font-size: larger;
+    margin-top: 50px;
     border-radius: 0.25rem;
     transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, color 0.15s ease-in-out;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
@@ -184,11 +192,6 @@ hr {
     text-decoration:overline underline;
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
 }
-
-/* .card2{
-    background-color: rgb(17, 16, 16);
-    margin: auto;
-} */
 
 
 .notification-header {

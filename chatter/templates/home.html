@@ -33,22 +33,44 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
     <body>
-        <div class="heading">
+        <!-- <div class="heading">
             <div class="row">
-                <div class="col">
+                <div class="col-md-5">
                     <a href="{% url 'profile' user.profile.pk  %}">
                         <h1  style="margin: 10px;margin-top:0; font-size: 2.25rem; color: #ffffff; text-transform: uppercase; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">{{ request.user }}</h1>
                     </a>
                 </div>
             </div>
-            <div class="col">
+            <div class="col-md-5 text-center mt-2">
                 <h1 style="margin: 10px; font-size: 2.25rem; color: #ffffff; text-transform: uppercase; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;" >Chatter</h1>
             </div>
-            <div class="col" style="padding-top: 20px;">
+            <div class="col-md-5" >
                 <a class="logout" href="{% url 'logout' %}">Logout</a>
             </div>    
-        </div>
+        </div> -->
 
+        <div class="main-header">
+            <div class="row2">
+                <div class="col-md">
+                    <div class="usernameuser">
+
+                        <a href="{% url 'profile' user.profile.pk  %}">
+                            <h1  style="margin-top:0; font-size: 2.25rem; color: #ffffff; text-transform: uppercase; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">{{ request.user }}</h1>
+                        </a>
+                    </div> 
+                </div>
+                <div class="col-md">
+                    <div class="middlename">
+                        <h1 style="margin: 10px; font-size: 2.25rem; color: #ffffff; text-transform: uppercase; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;" >Chatter</h1>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="logout">
+                        <a class="logout" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </div>
+            </div>
+        
 
         <nav class="navbar">
             {% block search %}
@@ -67,6 +89,7 @@
                 </ul> 
             </div>
         </nav>
+    </div>
         <br>
         <hr>      
 
@@ -77,8 +100,7 @@
                     <div class="trend">
                         <div class="not">
                             <h3>Trending Hashtags!</h3>
-                        </div>
-                        
+                        </div>                        
                         {% for tag in tags %}
                         <div class="hashtag">  
                             <ul>                          
@@ -86,6 +108,23 @@
                             </ul>
                         </div>
                         {% endfor %}
+
+                        <div class="not">
+                            <h3>News Highlights!</h3>
+                        </div> 
+
+                        <div class="newscap">
+                            {% for trend in trends %}
+                            <a href="{% url  'explore' %}">
+                                <div class="newstrend">  
+                                    <ul>                          
+                                        <li>{{trend}}</li>
+                                    </ul>
+                                </div>
+                            </a>
+                            {% endfor %}
+
+                        </div>
               
                     </div>
                 </div>                
@@ -173,10 +212,13 @@
                         <div class="not">
                             <h3>Connect With Friends</h3>
                         </div>
-                                                
-                        {% for prof in profile_list %}
-                            <p>{{ prof.username.capitalize }}</p>
-                        {% endfor %}                      
+                        <div class="proflist">
+                            {% for prof in profile_list %}
+                            <ul>
+                                <li>{{ prof.username.capitalize }}</li>
+                            </ul>                            
+                            {% endfor %} 
+                        </div>
                     </div>  
                 </div>
             </div>

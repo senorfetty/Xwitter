@@ -18,6 +18,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from .models import Account, Post
 from dotenv import load_dotenv
 import requests
+from .trends import get_trends
 import os
 from datetime import datetime
 from django.views.generic import UpdateView, DeleteView
@@ -125,10 +126,9 @@ def home(request):
     notifications= Notification.objects.filter(to_user=request_user) 
    
     posts = Post.objects.all().order_by('-created_at') 
-    username= Userprofile.objects.all()  
+    username= Userprofile.objects.all()     
+    trends= get_trends()
     
-    
-
     if request.method == 'POST':   
         form = PostForm(request.POST, request.FILES)
         
@@ -137,12 +137,18 @@ def home(request):
             new_post.author=request.user
             new_post.save()      
             
-            new_post.create_tag()         
+            new_post.create_tag()          
+            
+            form = PostForm()       
             
     else:
-        form = PostForm()         
+        form = PostForm()     
         
-    return render(request, 'home.html',{'posts' : posts, 'form' :form, 'username':username,  'profile_list': profile_list,'notifications':notifications,'tags':tags})
+        # user_profile = Userprofile.objects.get(user=request.user)
+        # profile_picture_url = user_profile.picture.url if user_profile.picture else None
+        
+        
+    return render(request, 'home.html',{'posts' : posts, 'form' :form, 'username':username,  'profile_list': profile_list,'notifications':notifications,'tags':tags,'trends':trends})
 
 def explore(request):
     if not request.user.is_authenticated:
@@ -189,6 +195,8 @@ def replycomments(request,post_pk,pk):
             
             new_comment.create_tag()
             
+            form= CommentForm()
+            
         notification = Notification.objects.create(notification_type=1,from_user=request.user,to_user=parent_comment.author,post=post)
             
     else:
@@ -200,6 +208,10 @@ def replycomments(request,post_pk,pk):
 def postcomments(request,pk):
     post= Post.objects.get(pk=pk)
     comments = Comment.objects.filter(post=post)
+    trends= get_trends()
+    tags= Tag.objects.all()
+    profile_list = Account.objects.all()
+    
     if request.method == 'POST':
         form = CommentForm(request.POST)
         
@@ -207,14 +219,16 @@ def postcomments(request,pk):
             comment= form.save(commit=False)
             comment.author=request.user
             comment.post= post            
-            comment.save()   
+            comment.save()
+            
+            form= CommentForm()   
             
         notification= Notification.objects.create(notification_type=1,from_user=request.user,to_user=post.author,post=post)         
             
     else:
         form=CommentForm()            
             
-    return render(request, 'comments.html', {'post':post, 'form':form, 'comments':comments})
+    return render(request, 'comments.html', {'post':post, 'form':form, 'comments':comments, 'trends':trends, 'tags':tags,'profile_list':profile_list})
 
 def nots(request):
     if not request.user.is_authenticated:
@@ -230,6 +244,7 @@ def nots(request):
 def postnotifications(request, notification_pk,post_pk):
     notification= Notification.objects.get(pk=notification_pk)
     post=Post.objects.get(pk=post_pk)
+    
     
     notification.user_has_seen = True
     notification.save()
@@ -491,6 +506,7 @@ def commentdislikes(request,pk,post_pk):
         
     next= request.POST.get('next','/')
     return HttpResponseRedirect(next)
+
 def childcommentlikes(request, post_pk, parent_pk, pk):
     child_comment = Comment.objects.get(pk=pk)
     

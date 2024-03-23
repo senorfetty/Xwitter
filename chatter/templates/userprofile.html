@@ -22,24 +22,8 @@
         <div class="profile">
             <br>
             <img src="{{ profile.picture.url }}" height="150" width="150" alt=""> 
-            <div class="details">
-                {% if profile.name %}
-                <h1>Name: {{ profile.name }} </h1> 
-                {% endif %} 
-                
-                {% if profile.bio %}
-                <p>Bio: {{ profile.bio }}</p> 
-                {% endif %}
-        
-                {% if profile.location %}
-                <p>Location: {{ profile.location }}</p> 
-                {% endif %}
-        
-                {% if profile.birth_date %}
-                <p>Date Of Birth: {{ profile.birth_date }}</p>
-                {% endif %}     
-            </div>
             
+            <h1 style='margin:0'>{{ user.username.capitalize }}</h1>
             <div class="follows">
                 <a href="{% url 'lof' profile.pk %}">FOLLOWERS: {{ number_of_followers }}</a>                
                 {% if user != request.user %}
@@ -56,6 +40,25 @@
                 {% endif %}
                 {% endif %}
             </div> 
+            <div class="details" style='background-color:black'> 
+                {% if profile.name %}
+                <p>Name: {{ profile.name }} </p> 
+                {% endif %} 
+                
+                {% if profile.bio %}
+                <p>Bio: {{ profile.bio }}</p> 
+                {% endif %}
+        
+                {% if profile.location %}
+                <p>Location: {{ profile.location }}</p> 
+                {% endif %}
+        
+                {% if profile.birth_date %}
+                <p>Date Of Birth: {{ profile.birth_date }}</p>
+                {% endif %}     
+            </div>
+            
+            
         </div>
           
 
