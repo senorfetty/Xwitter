@@ -32,9 +32,7 @@ body {
     font-weight: bold;
     background-color: #000000;
     border-color: #261212;
-    padding: 0.5rem 1rem;
     font-size: larger;
-    margin-top: 50px;
     border-radius: 0.25rem;
     transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, color 0.15s ease-in-out;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
@@ -88,7 +86,8 @@ a{
 }
 
 .search-form {
-    float: right;
+    display: flex;
+    justify-content: end;
 }
 
 .search-form input[type="text"] {
@@ -135,11 +134,6 @@ button {
 button:hover {
     background-color: rgb(12, 18, 194);
     cursor: pointer;
-}
-
-
-.container2 {
-    padding: 1rem;
 }
 
 .trend {
@@ -193,9 +187,12 @@ hr {
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
 }
 
+/* /* .notification-card {
+    background-color: #000000;
+} */
 
-.notification-header {
-    background-color: #8c909d;
+/* .notification-header {
+    background-color: #000000; 
     color: #000000;
     display: flex;
     justify-content: space-between;
@@ -203,20 +200,34 @@ hr {
     margin: auto;
     width: 60%;
     border:  3px solid rgb(0, 0, 0);
-    border-radius:  17px;
+    border-radius:  17px; 
     
-}
+}  */
 
 .nots h3 {
     margin: 0;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
-
+    font-size: large;
+} 
+/* 
 .nots{
     margin: 0;
     padding:1rem ;
     background-color: rgb(198, 158, 158);
+} */ 
+
+
+.notification-header {
+    width: 50%;
+    display: flex;
+    align-items:  center;
+    font-size: small;
+    justify-content: space-between;
+    margin: auto;
+    background-color: #271e1ee2;
+    border-radius: 20px;
+    margin-bottom: 10px;
 }
+
 .butt {
     background-color: rgb(0, 0, 0);
     color: rgb(255, 255, 255);
@@ -276,8 +287,8 @@ hr {
 
 #createdat {
     color:  rgb(72, 211, 7);
-    display: flex;
-    justify-content: end;
+    margin-right: 0;
+    float: right;
 }
 
 .back {
@@ -348,9 +359,38 @@ h3 {
     height: 100%;
 }
 
-.profile-container{    
-    width: 60%; 
-    max-width: 800px;
+.profile-container {
+    background-color: rgba(19, 16, 16, 0.986);
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 80%; 
+    margin-left: 10%;
+    margin-right: 20%;
+    border: 1px solid rgb(66, 28, 28);
+
+}
+
+.follows {
+    background-color: #007bff;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-style: oblique;
+    border-radius: 5px;    
+}
+
+.bio-container {
+    background-color: rgba(3, 3, 3, 0.986);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid rgb(32, 27, 27);
+}
+
+
+/* .profile-container{    
+    
+    
     display: flex;
     margin-left: 20%;
     justify-content:space-between;
@@ -365,7 +405,7 @@ h3 {
     font-style:oblique;
     color: #000000;
     font-weight: bold;
-}
+} */
 
 .follows {
     color:#000000
@@ -459,17 +499,12 @@ i.fas.fa-search {
     color: white;
 }
 
-
-/* CSS styles for the followers list page */
-
-/* Styles for the container holding the followers list */
 .followerslist-container {
     max-width: 600px;
     margin: 20px auto;
     padding: 0 20px;
 }
 
-/* Styles for each follower item */
 .follower-item {
     display: flex;
     justify-content: space-between;

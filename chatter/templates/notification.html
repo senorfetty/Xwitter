@@ -8,9 +8,9 @@
 <li class="nav-item"><a href="{% url 'home' %}" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
 <li class="nav-item"><a href="{% url 'explore' %}" class="nav-link"><i class="fas fa-search"></i> Explore</a></li>
 <li class="nav-item"><a href="{% url 'notifications' %}" class="nav-link active"><i class="fas fa-bell"></i> Notifications 
-{% if notifications %} <span class="badge badge-pill badge-danger">{{notifications.count}} </span>{% endif %}
+<span class="badge badge-pill badge-danger">{{not_count}} </span>
 </a></li>
-<li class="nav-item"><a href="{% url 'messages' %}" class="nav-link"><i class="fas fa-envelope"></i> Messages</a></li>
+<li class="nav-item"><a href="{% url 'messages' %}" class="nav-link"><i class="fas fa-paper-plane"></i> Messages</a></li>
 {% endblock %}
 
 {% block home %}
@@ -23,15 +23,15 @@
     {% if notifications %}
     <div class="notification-card">
         {% for notification in notifications %}
-        <div class="cardbody">
+        <div class="card-body">
             {% if notification.post %}
                 {% if notification.notification_type == 0 %}
                     <div class="notification-header">
                         <a href="{% url 'postnotifications'  notification.pk notification.post.pk  %}">
                             <div class="nots">
                                 <h3>
-                                <i class="fas fa-heart">                            
-                                {{ notification.from_user.username.capitalize }} has liked your post</i></h3> 
+                                <i class="fas fa-heart" style="color: red;"></i>                           
+                                {{ notification.from_user.username.capitalize }} has liked your post</h3> 
                             </div>
                         </a>
                     </div>
@@ -40,7 +40,7 @@
                         <a href="{% url 'postnotifications' notification.pk notification.post.pk  %}">
                             <div class="nots"> 
                                 <h3>
-                                    <i class="fas fa-comment"></i>
+                                    <i class="fas fa-comment" style="color: black;"></i>
                                     {{ notification.from_user.username.capitalize }} has commented on your post</h3>
                             </div>
                         </a>
@@ -52,7 +52,7 @@
                         <div class="nots"> 
                             <h3>
                                 <a href="{% url 'postnotifications'  notification.pk notification.comment.pk  %}">
-                                    <i class="fas fa-heart"></i>
+                                    <i class="fas fa-heart" style="color: red;"></i>
                                     {{ notification.from_user.username.capitalize }} has liked your comment</h3>
                                 </a>
                         </div>
@@ -62,7 +62,7 @@
                         <div class="nots"> 
                             <h3>
                                 <a href="{% url 'postnotifications'  notification.pk notification.comment.pk  %}">
-                                    <i class="fas fa-comment"> 
+                                    <i class="fas fa-comment" style="color: black;"> </i>
                                     {{ notification.from_user.username.capitalize }} has replied to your comment</h3>
                                 </a>
                         </div>
@@ -73,7 +73,7 @@
                     <div class="nots"> 
                         <h3>
                             <a href="{% url 'messagenotifications' notification.pk notification.thread.pk %}">
-                                <i class="fas fa-envelope"></i>
+                                <i class="fas fa-envelope" style="color: black;"></i>
                                 {{ notification.from_user.username.capitalize }} sent you a message </h3>
                             </a>    
                     </div>
@@ -84,13 +84,14 @@
                     <div class="nots"> 
                         <h3>
                             <a href="{% url 'follownotifications' notification.pk notification.from_user.profile.pk %}">
-                                <i class="fas fa-user"></i>
+                                <i class="fas fa-user" style="color: black;"></i>
                                 {{ notification.from_user.username.capitalize }} has followed you </h3>
                             </a>    
                     </div>
                 </div>
             {% endif %}
+        </div>
         {% endfor %}
-    </div>
+    </div>       
 {% endif %}
 {% endblock %}

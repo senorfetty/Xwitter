@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from. models import Account, Post, Comment, Message
+from. models import Account, Post, Comment, Message, Userprofile
 
 
 class RegForm(UserCreationForm):
@@ -45,4 +45,11 @@ class MessageForm(forms.ModelForm):
         model= Message
         fields= ['body','image']
     
+class EditProfileForm(forms.ModelForm):
     
+    class Meta:
+        model = Userprofile
+        fields= ['name', 'bio', 'location', 'birth_date', 'picture']
+        widgets=  {
+            'birth_date': forms.DateInput(attrs={'type': 'date'})            
+        }

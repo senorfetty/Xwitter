@@ -122,8 +122,8 @@ def home(request):
     tags= Tag.objects.all()
 
     profile_list = Account.objects.all()
-    request_user= request.user
-    notifications= Notification.objects.filter(to_user=request_user) 
+    notifications= Notification.objects.filter(to_user=request.user,user_has_seen=False).exclude(from_user=request.user)
+    not_count= notifications.count()    
    
     posts = Post.objects.all().order_by('-created_at') 
     username= Userprofile.objects.all()     
@@ -148,17 +148,15 @@ def home(request):
         # profile_picture_url = user_profile.picture.url if user_profile.picture else None
         
         
-    return render(request, 'home.html',{'posts' : posts, 'form' :form, 'username':username,  'profile_list': profile_list,'notifications':notifications,'tags':tags,'trends':trends})
+    return render(request, 'home.html',{'posts' : posts, 'form' :form, 'username':username,  'profile_list': profile_list,'not_count':not_count,'tags':tags,'trends':trends})
 
 def explore(request):
     if not request.user.is_authenticated:
         messages.error(request, "You must be logged in to access this page.")
         return redirect('login')
     
-    request_user= request.user
-    notifications= Notification.objects.filter(to_user=request_user) 
-   
-    
+    notifications= Notification.objects.filter(to_user=request.user,user_has_seen=False).exclude(from_user=request.user)
+    not_count= notifications.count()    
     api_key= os.getenv('newsapikey')
     url= f'https://newsapi.org/v2/top-headlines?country=us&apiKey={api_key}'
    
@@ -177,7 +175,7 @@ def explore(request):
         
     trending_topics = [article['title'][:20] for article in news if article.get('content') and '[Removed]' not in article['title']]
  
-    return render(request, 'explore.html', {'news' : filtered_news, 'trending_topics' : trending_topics, 'notifications' : notifications})
+    return render(request, 'explore.html', {'news' : filtered_news, 'trending_topics' : trending_topics, 'not_count' : not_count})
 
 def replycomments(request,post_pk,pk):
     post= Post.objects.get(pk=post_pk)
@@ -212,6 +210,10 @@ def postcomments(request,pk):
     tags= Tag.objects.all()
     profile_list = Account.objects.all()
     
+    notifications= Notification.objects.filter(to_user=request.user,user_has_seen=False).exclude(from_user=request.user)
+    not_count= notifications.count()    
+    
+    
     if request.method == 'POST':
         form = CommentForm(request.POST)
         
@@ -228,18 +230,18 @@ def postcomments(request,pk):
     else:
         form=CommentForm()            
             
-    return render(request, 'comments.html', {'post':post, 'form':form, 'comments':comments, 'trends':trends, 'tags':tags,'profile_list':profile_list})
+    return render(request, 'comments.html', {'post':post, 'form':form, 'comments':comments, 'trends':trends, 'tags':tags,'profile_list':profile_list,'not_count':not_count})
 
 def nots(request):
     if not request.user.is_authenticated:
         messages.error(request, "You must be logged in to access this page.")
         return redirect('login')
     
-    request_user= request.user
-    notifications= Notification.objects.filter(to_user=request_user).exclude(user_has_seen=True)
     
+    notifications= Notification.objects.filter(to_user=request.user,user_has_seen=False).exclude(from_user=request.user)
+    not_count= notifications.count()    
     
-    return render(request, 'notification.html', {'notifications': notifications})
+    return render(request, 'notification.html', {'notifications': notifications, 'not_count':not_count})
 
 def postnotifications(request, notification_pk,post_pk):
     notification= Notification.objects.get(pk=notification_pk)
@@ -307,11 +309,15 @@ class CommentDeleteView(CustomLoginRequiredMixin,UserPassesTestMixin,DeleteView)
     
     
 def userProfile(request,pk):
+    notifications= Notification.objects.filter(to_user=request.user,user_has_seen=False).exclude(from_user=request.user)
+    not_count= notifications.count()    
     profile = Userprofile.objects.get(pk=pk)
     user = profile.user
     posts= Post.objects.filter(author=user).order_by('-created_at')
     
     followers= profile.followers.all()
+    
+    
     
     if len(followers) == 0:
         is_following=False
@@ -330,14 +336,15 @@ def userProfile(request,pk):
         'user':user,
         'posts':posts,
         'number_of_followers':number_of_followers,
-        'is_following':is_following        
+        'is_following':is_following,        
+        'not_count': not_count
     }
     
     return render(request, 'userprofile.html', context)
 
 class EditProfileView(CustomLoginRequiredMixin,UserPassesTestMixin,UpdateView):
     model= Userprofile
-    fields= ('name','bio','location','birth_date','picture')
+    form_class= EditProfileForm
     template_name="editprofile.html"
     
     def get_success_url(self):
@@ -366,6 +373,9 @@ def listfollowers(request,pk):
     profile = Userprofile.objects.get(pk=pk)    
     followers= profile.followers.all()
     
+    notifications= Notification.objects.filter(to_user=request.user,user_has_seen=False).exclude(from_user=request.user)
+    not_count= notifications.count()    
+    
     if len(followers) == 0:
         is_following=False
     
@@ -380,7 +390,8 @@ def listfollowers(request,pk):
     context = {
         'followers':followers,
         'profile':profile,
-        'is_following':is_following        
+        'is_following':is_following,
+        'not_count':not_count      
     }
     
     return render(request, 'listoffollowers.html', context)
@@ -572,12 +583,14 @@ def msg(request):
         return redirect('login')
     
     profile= Userprofile.objects.all().filter(name=request.user)
+    notifications= Notification.objects.filter(to_user=request.user,user_has_seen=False).exclude(from_user=request.user)
+    not_count= notifications.count()    
     
 
     threads= Thread.objects.filter(Q(user=request.user) | Q(receiver=request.user))    
    
     
-    return render(request, 'messages.html',{'threads':threads,'profile':profile})
+    return render(request, 'messages.html',{'threads':threads,'profile':profile, 'not_count':not_count})
 
 def createthread(request):
     if request.method == 'POST':
@@ -609,8 +622,10 @@ def createthread(request):
             
     else:
         form= ThreadForm()
+        notifications= Notification.objects.filter(to_user=request.user,user_has_seen=False).exclude(from_user=request.user)
+        not_count= notifications.count()    
         
-    return render(request, 'thread.html', {'form':form})
+    return render(request, 'thread.html', {'form':form,'not_count':not_count})
     
     
 def inbox(request,pk):
@@ -618,10 +633,14 @@ def inbox(request,pk):
     thread= Thread.objects.get(pk=pk)
     message_list= Message.objects.filter(thread__pk__contains=pk)
     
+    notifications= Notification.objects.filter(to_user=request.user,user_has_seen=False).exclude(from_user=request.user)
+    not_count= notifications.count()    
+    
     context = {
         'message_list' : message_list,
         'thread' : thread,
-        'form' : form
+        'form' : form,
+        'not_count' : not_count
     }
     
     return render (request,'inbox.html',context)

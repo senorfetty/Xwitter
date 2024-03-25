@@ -33,22 +33,6 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
     <body>
-        <!-- <div class="heading">
-            <div class="row">
-                <div class="col-md-5">
-                    <a href="{% url 'profile' user.profile.pk  %}">
-                        <h1  style="margin: 10px;margin-top:0; font-size: 2.25rem; color: #ffffff; text-transform: uppercase; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">{{ request.user }}</h1>
-                    </a>
-                </div>
-            </div>
-            <div class="col-md-5 text-center mt-2">
-                <h1 style="margin: 10px; font-size: 2.25rem; color: #ffffff; text-transform: uppercase; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;" >Chatter</h1>
-            </div>
-            <div class="col-md-5" >
-                <a class="logout" href="{% url 'logout' %}">Logout</a>
-            </div>    
-        </div> -->
-
         <div class="main-header">
             <div class="row2">
                 <div class="col-md">
@@ -61,169 +45,180 @@
                 </div>
                 <div class="col-md">
                     <div class="middlename">
-                        <h1 style="margin: 10px; font-size: 2.25rem; color: #ffffff; text-transform: uppercase; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;" >Chatter</h1>
+                        <h1 style=" margin-top:0; font-size: 2.25rem; color: #ffffff; text-transform: uppercase; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;" >Chatter</h1>
                     </div>
                 </div>
                 <div class="col-md">
                     <div class="logout">
                         <a class="logout" href="{% url 'logout' %}">Logout</a>
                     </div>
-                </div>
+                </div> 
             </div>
-        
-
-        <nav class="navbar">
-            {% block search %}
-            <form class="search-form" action="{% url 'results' %}" method='get'>
-                <input type="text" placeholder="Search ..."  name="query" value="{{ request.GET.query }}"> <button style="background-color: black;"><i class="fas fa-search"></i></button>
-            </form>
-            {% endblock %}
+        </div>
+     
+        <nav class="navbar">            
             <div class="container">
                 <ul class="navbar-nav">
                     {% block navbar %}
                     <li class="nav-item"><a href="{% url 'home' %}" class="nav-link active"><i class="fas fa-home fa-beat"></i> Home</a></li>
                     <li class="nav-item"><a href="{% url 'explore' %}" class="nav-link"><i class="fas fa-search"></i> Explore</a></li>
-                    <li class="nav-item"><a href="{% url 'notifications' %}" class="nav-link "><i class="fas fa-bell"></i> Notifications</a></li> 
-                    <li class="nav-item"><a href="{% url 'messages' %}" class="nav-link"><i class="fas fa-envelope"></i> Messages</a></li>
+                    <li class="nav-item"><a href="{% url 'notifications' %}" class="nav-link"><i class="fas fa-bell"></i> Notifications 
+                        <span class="badge badge-pill badge-danger">{{not_count}} </span>
+                        </a></li>
+                    <li class="nav-item"><a href="{% url 'messages' %}" class="nav-link"><i class="fas fa-paper-plane"></i> Messages</a></li>
                     {% endblock %}
                 </ul> 
             </div>
         </nav>
-    </div>
-        <br>
-        <hr>      
 
-        {% block home %}        
-        <div class="container2">        
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="trend">
-                        <div class="not">
-                            <h3>Trending Hashtags!</h3>
-                        </div>                        
-                        {% for tag in tags %}
-                        <div class="hashtag">  
-                            <ul>                          
-                                <li>{{tag.name}}</li>
-                            </ul>
-                        </div>
+        {% block search %}
+            <div class="searcher">            
+                <form class="search-form" action="{% url 'results' %}" method="get">
+                    <input type="text" placeholder="Search ..." name="query" value="{{ request.GET.query }}"> <button
+                            style="background-color: black;"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        {% endblock %}
+    
+
+    {% block home %}        
+    <div class="container4">        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="trend">
+                    <div class="not">
+                        <h3>Trending Hashtags!</h3>
+                    </div>                        
+                    {% for tag in tags %}
+                    <div class="hashtag">  
+                        <ul>                          
+                            <li>{{tag.name}}</li>
+                        </ul>
+                    </div>
+                    {% endfor %}
+
+                    <div class="not">
+                        <h3>News Highlights!</h3>
+                    </div> 
+
+                    <div class="newscap">
+                        {% for trend in trends %}
+                        <a href="{% url  'explore' %}">
+                            <div class="newstrend">  
+                                <ul>                          
+                                    <li>{{trend}}</li>
+                                </ul>
+                            </div>
+                        </a>
                         {% endfor %}
 
-                        <div class="not">
-                            <h3>News Highlights!</h3>
-                        </div> 
-
-                        <div class="newscap">
-                            {% for trend in trends %}
-                            <a href="{% url  'explore' %}">
-                                <div class="newstrend">  
-                                    <ul>                          
-                                        <li>{{trend}}</li>
-                                    </ul>
-                                </div>
-                            </a>
-                            {% endfor %}
-
-                        </div>
-              
                     </div>
+            
+                </div>
+            </div>                
+            {% block comment %}
+            <div class="col-md-4">
+                <div class="chatbox">
+                    <form action="" method="post" enctype="multipart/form-data" >
+                        {% csrf_token %}
+                        {{form.body}}
+                        {{ form.image }}
+                        <button>Post</button>
+                    </form>
+                </div>
+                <div class="not">
+                    <h1>Posts</h1>
                 </div>                
-                {% block comment %}
-                <div class="col-md-4">
-                    <div class="chatbox">
-                        <form action="" method="post" enctype="multipart/form-data" >
-                            {% csrf_token %}
-                            {{form.body}}
-                            {{ form.image }}
-                            <button>Post</button>
-                        </form>
-                    </div>
-                    <div class="not">
-                        <h1>Posts</h1>
-                    </div>                
-                    
-                    <div class="posts">
-                        {% for post in posts %}                                   
-                        <div class="card4"> 
-                            <a href="{% if post.author.profile %}{% url 'profile' post.author.profile.pk %}{% endif %}">
-                                <h2 class="at">@{{ post.author }}</h2>
-                            </a>
-                            {% if request.user == post.author %}
-                            <div class='btns'>
-                                <a class='btns' href='{% url "editpost" post.pk %}'style='color:white;' ><i class='far fa-edit'></i></a>
-                                <a class='btns' href='{% url "deletepost" post.pk %}' style='color:white' ><i class='fas fa-trash'></i></a>
-                            </div>
-                                {% endif %}
-                            <div class="pbody">
-                                {% if post.image %}
-                                <div class="imagepost">                                    
-                                    <img src="{{ post.image.url }}" alt="Image"/>
-                                </div>       
-                                {% endif %}  
-                                <div class="b">
-                                    <p>{{ post.body }}</p>
-                                </div>                                                   
-                                <p id='createdat'>{{ post.created_at }}</p> <br>
-                                <a href="{% url 'postdetail'  post.pk %}" class="streched_link"></a>
-                            </div>
-                            <div class="conta">
-                                <div class="likes">
-                                    <form method="post" action="{% url 'likes' post.pk %}" >
-                                        {% csrf_token %}
-                                        <input type="hidden" name="next" value="{{ request.path }}">
-                                        <button class="like-btn" type="submit">
-                                            <i class="fas fa-thumbs-up">
-                                                {%  if  post.likes.all.count == 1 %}
-                                                {{ post.likes.all.count }} Like
-                                                {% else %}                                                
-                                                {{ post.likes.all.count }} Likes
-                                                {% endif %}
-                                            </i>
-                                        </button>
-                                    </form>
-                                </div>
-                                <div class="dislikes">
-                                    <form action="{% url 'dislikes' post.pk %}" method="post">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="next" value="{{ request.path }}">
-                                        <button class="dislike-btn" type="submit">
-                                            <i class="fas fa-thumbs-down">
-                                                {%  if  post.dislikes.all.count == 1 %}
-                                                {{ post.dislikes.all.count }} Dislike
-                                                {% else %}                                                
-                                                {{ post.dislikes.all.count }} Dislikes
-                                                {% endif %}
-                                            </i>
-                                        </button>
-                                    </form>
-                                </div> 
-                                <div class="reply">
-                                    <button type="submit"><a href="{% url 'postdetail' post.pk %}"><i class="fas fa-comment">Comments</i></a></button>
-                                </div> 
-                            </div>
-                        </div>  
-                    {% endfor %}   
-                    </div>                        
-                </div>  
-                {% endblock %}                
-
-                <div class="col-md-4">
-                    <div class="other">
-                        <div class="not">
-                            <h3>Connect With Friends</h3>
+                
+                <div class="posts">
+                    {% for post in posts %}                                   
+                    <div class="card4"> 
+                        <a href="{% if post.author.profile %}{% url 'profile' post.author.profile.pk %}{% endif %}">
+                            <h2 class="at">@{{ post.author }}</h2>
+                        </a>
+                        {% if request.user == post.author %}
+                        <div class='btns'>
+                            <a class='btns' href='{% url "editpost" post.pk %}'style='color:white;' ><i class='far fa-edit'></i></a>
+                            <a class='btns' href='{% url "deletepost" post.pk %}' style='color:white' ><i class='fas fa-trash'></i></a>
                         </div>
-                        <div class="proflist">
-                            {% for prof in profile_list %}
-                            <ul>
-                                <li>{{ prof.username.capitalize }}</li>
-                            </ul>                            
-                            {% endfor %} 
+                            {% endif %}
+                        <div class="pbody">
+                            {% if post.image %}
+                            <div class="imagepost">                                    
+                                <img src="{{ post.image.url }}" alt="Image"/>
+                            </div>       
+                            {% endif %}  
+                            <div class="b">
+                                <p>{{ post.body }}</p>
+                            </div>
+                            <br>
+                            <div class="createdat">
+                                <p id='createdat'>{{ post.created_at }}</p>
+                            </div> <br>
+                            <a href="{% url 'postdetail'  post.pk %}" class="streched_link"></a>
+                        </div>
+                        <div class="conta">
+                            <div class="likes">
+                                <form method="post" action="{% url 'likes' post.pk %}" >
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <button class="like-btn" type="submit">
+                                        <i class="fas fa-thumbs-up">
+                                            {%  if  post.likes.all.count == 1 %}
+                                            {{ post.likes.all.count }} Like
+                                            {% else %}                                                
+                                            {{ post.likes.all.count }} Likes
+                                            {% endif %}
+                                        </i>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="dislikes">
+                                <form action="{% url 'dislikes' post.pk %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <button class="dislike-btn" type="submit">
+                                        <i class="fas fa-thumbs-down">
+                                            {%  if  post.dislikes.all.count == 1 %}
+                                                {{ post.dislikes.all.count }} Dislike
+                                            {% else %}                                                
+                                                {{ post.dislikes.all.count }} Dislikes
+                                            {% endif %}
+                                        </i>
+                                    </button>
+                                </form>
+                            </div> 
+                            <div class="reply">
+                                <button type="submit"><a href="{% url 'postdetail' post.pk %}"><i class="fas fa-comment">Comments</i></a></button>
+                            </div> 
                         </div>
                     </div>  
-                </div>
+                {% endfor %}   
+                </div>                        
+            </div>  
+            {% endblock %}                
+
+            <div class="col-md-4">
+                <div class="other">
+                    <div class="not">
+                        <h3>Connect With Friends</h3>
+                    </div>
+                    <div class="proflist">
+                        {% for prof in profile_list %}
+                        {% if request.user.username != prof.username %}
+                        <ul style="margin: 0">                        
+                            <a href="{% url 'profile' prof.profile.pk %}">
+                            <li>{{ prof.username.capitalize }}</li>
+                            </a>
+                        </ul>     
+                        {% endif %}                       
+                        {% endfor %} 
+                    </div>
+                </div>  
             </div>
         </div>
-        {% endblock %} 
+    </div>
+    {% endblock %} 
 
         <script src="{% static 'js/tag.js' %}"></script>
         <script src="{% static 'js/likes.js' %}"></script>
