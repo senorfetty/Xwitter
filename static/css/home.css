@@ -85,6 +85,20 @@ a{
     background-color: white;
 }
 
+.middlename {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #ff00de, 0 0 70px #ff00de, 0 0 80px #ff00de, 0 0 100px #ff00de, 0 0 150px #ff00de;
+    animation: glow 1s infinite alternate;
+}
+
+@keyframes middlename {
+    from {
+        text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #ff00de, 0 0 70px #ff00de, 0 0 80px #ff00de, 0 0 100px #ff00de, 0 0 150px #ff00de;
+    }
+    to {
+        text-shadow: 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #fff, 0 0 50px #ff00de, 0 0 80px #ff00de, 0 0 90px #ff00de, 0 0 110px #ff00de, 0 0 160px #ff00de;
+    }
+}
+
 .search-form {
     display: flex;
     justify-content: end;
